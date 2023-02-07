@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
-import { RouterLink, useRoute } from 'vue-router';
-import router from '@/router';
-import { getCurrentUser } from 'vuefire';
+import ErrorAlert from '@/components/ErrorAlert.vue.js';
 import GithubProvider from '@/providers/authentication/github';
 import GoogleProvider from '@/providers/authentication/google';
+import router from '@/router';
+import { onMounted, reactive } from 'vue';
+import { RouterLink, useRoute } from 'vue-router';
+import { getCurrentUser } from 'vuefire';
+import { email, required } from '@vuelidate/validators'
+import useVuelidate from '@vuelidate/core';
 
 const route = useRoute();
 
@@ -15,6 +18,27 @@ const AuthWithGithub = async () => {
 const AuthWithGoogle = async () => {
   await GoogleProvider.signIn();
 };
+
+const onSubmit = async (e) => {
+  const result = await v$.value.$validate();
+  if (result) {
+    alert('Form is valid');
+  } else {
+    alert('Form is invalid');
+  }
+}
+
+const formData = reactive({
+  email: '',
+  password: '',
+});
+
+const rules = {
+  email: { required, email },
+  password: { required },
+};
+
+const v$ = useVuelidate(rules, formData);
 
 onMounted(async () => {
   const currentUser = await getCurrentUser();
@@ -48,14 +72,20 @@ onMounted(async () => {
         </div>
 
         <!-- Manual -->
-        <form class="w-full flex flex-col space-y-6">
+        <form @submit.prevent="onSubmit" class="w-full flex flex-col space-y-6">
           <div>
-            <label class="block">Email</label>
-            <input type="email" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-lg" />
+            <ErrorAlert :errors="v$.email.$errors" />
+            <div>
+              <label class="block">Email</label>
+              <input type="email" v-model="formData.email" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-lg" />
+            </div>
           </div>
           <div>
-            <label class="block">Password</label>
-            <input type="password" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-lg" />
+            <ErrorAlert :errors="v$.password.$errors" />
+            <div>
+              <label class="block">Password</label>
+              <input type="password" v-model="formData.password" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-lg" />
+            </div>
           </div>
 
           <button type="submit" class="w-full px-4 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded text-lg">
