@@ -4,7 +4,7 @@ import useVuelidate from '@vuelidate/core';
 import { reactive } from 'vue';
 import { RouterLink } from 'vue-router';
 import ErrorAlert from '@/components/ErrorAlert.vue';
-import AuthProvider from '@/providers/authentication/auth';
+import AuthProvider from '@/providers/authentication/manual';
 
 const onSubmit = async (e) => {
   const result = await v$.value.$validate();

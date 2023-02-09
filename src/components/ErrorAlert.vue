@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import type { ErrorObject } from '@vuelidate/core';
+import type {Error} from '@/stores/auth';
 
 defineProps<{
-  errors: ErrorObject[];
+  errors: ErrorObject[] | Error[];
 }>();
 </script>
 
 <template>
-  <div v-for="error in errors" :key="error.$uid" class="flex p-4 mb-4 text-red-800 rounded-lg bg-red-50" role="alert">
+  <div v-for="error, index in errors" :key="index" class="flex p-4 mb-4 text-red-800 rounded-lg bg-red-50" role="alert">
     <svg aria-hidden="true" class="flex-shrink-0 w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
       xmlns="http://www.w3.org/2000/svg">
       <path fill-rule="evenodd"
