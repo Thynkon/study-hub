@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import ErrorAlert from '@/components/ErrorAlert.vue';
-
 import GithubProvider from '@/providers/authentication/github';
 import GoogleProvider from '@/providers/authentication/google';
 import AuthProvider from '@/providers/authentication/auth';
@@ -82,6 +81,7 @@ onMounted(async () => {
 
         <!-- Manual -->
         <form @submit.prevent="onSubmit" class="w-full flex flex-col space-y-6">
+          <ErrorAlert :errors="apiErrors" />
           <div>
             <ErrorAlert :errors="v$.email.$errors" />
             <div>
