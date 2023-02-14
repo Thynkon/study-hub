@@ -1,18 +1,17 @@
 <script setup lang="ts">
-import { email, required, sameAs } from '@vuelidate/validators'
+import { email, minLength, required, sameAs } from '@vuelidate/validators'
 import useVuelidate from '@vuelidate/core';
-import { reactive } from 'vue';
+import { computed, reactive } from 'vue';
 import { RouterLink } from 'vue-router';
 import ErrorAlert from '@/components/ErrorAlert.vue';
 import AuthProvider from '@/providers/authentication/manual';
+import { useAuthStore } from '@/stores/auth';
 
 const onSubmit = async (e) => {
   const result = await v$.value.$validate();
   if (result) {
     await AuthProvider.register(formData.email, formData.password);
-    console.log("Registered");
   } else {
-    alert('Form is invalid');
     console.log(v$);
   }
 }
@@ -23,13 +22,14 @@ const formData = reactive({
   passwordConfirmation: '',
 });
 
-const rules = {
+const rules = computed(() => ({
   email: { required, email },
-  password: { required },
-  passwordConfirmation: { required },
-};
+  password: { required, minLength: minLength(6) },
+  passwordConfirmation: { required, sameAsPassword: sameAs(formData.password) },
+}));
 
 const v$ = useVuelidate(rules, formData);
+const auth = useAuthStore();
 
 </script>
 
@@ -43,6 +43,7 @@ const v$ = useVuelidate(rules, formData);
       <!-- Multi-Step form -->
       <form @submit.prevent="onSubmit" class="max-w-lg w-full flex flex-col space-y-6">
         <div class="">
+          <ErrorAlert :errors="auth.registerErrors" />
           <div>
             <ErrorAlert :errors="v$.email.$errors" />
             <label class="block py-2">Email</label>
@@ -52,9 +53,9 @@ const v$ = useVuelidate(rules, formData);
 
           <div>
             <ErrorAlert :errors="v$.password.$errors" />
-              <label class="block py-2">Password</label>
-              <input type="password" name="password" v-model="formData.password"
-                class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-lg" />
+            <label class="block py-2">Password</label>
+            <input type="password" name="password" v-model="formData.password"
+              class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-lg" />
           </div>
           <div>
             <ErrorAlert :errors="v$.passwordConfirmation.$errors" />

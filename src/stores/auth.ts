@@ -15,7 +15,7 @@ export type Error = {
 
 export const useAuthStore = defineStore('auth', () => {
   const loginErrors = ref<Error[]>([]);
-  const registerErrors = ref<string[]>([]);
+  const registerErrors = ref<Error[]>([]);
 
   function login(email: string, password: string) {
     signInWithEmailAndPassword(auth!, email, password)
@@ -44,7 +44,7 @@ export const useAuthStore = defineStore('auth', () => {
         const errorMessage = error.message;
 
         console.log(errorCode, errorMessage);
-        // TODO: Display error in the view
+        registerErrors.value = [{ $message: errorMessage }];
       });
   }
 
