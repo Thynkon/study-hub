@@ -1,9 +1,9 @@
 <script setup lang="ts"></script>
 
 <template>
-  <main class="">
+  <main>
     <div>
-      <h2 class="text-3xl font-semibold uppercase text-center">Home</h2>
+      <h2 class="text-3xl font-semibold uppercase">Home</h2>
     </div>
   </main>
 </template>

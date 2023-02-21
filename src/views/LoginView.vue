@@ -1,18 +1,53 @@
 <script setup lang="ts">
-
+import ErrorAlert from '@/components/ErrorAlert.vue';
 import GithubProvider from '@/providers/authentication/github';
+import GoogleProvider from '@/providers/authentication/google';
+import AuthProvider from '@/providers/authentication/manual';
+
 import router from '@/router';
-import { exit } from 'process';
-import { onMounted } from 'vue';
+import { onMounted, reactive } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
-import { getCurrentUser, useFirebaseAuth } from 'vuefire';
+import { getCurrentUser } from 'vuefire';
+import { email, required } from '@vuelidate/validators';
+import useVuelidate from '@vuelidate/core';
+import { useAuthStore } from '@/stores/auth';
 
 const route = useRoute();
+const auth = useAuthStore();
+
 const AuthWithGithub = async () => {
-  console.log("Clicked on AuthWithGithub");
   await GithubProvider.signIn();
-  console.log("got the user: ");
-}
+};
+
+const AuthWithGoogle = async () => {
+  await GoogleProvider.signIn();
+};
+
+const onSubmit = async (e) => {
+  const result = await v$.value.$validate();
+  if (!result) {
+    return;
+  }
+
+  auth.login(formData.email, formData.password)
+    .then((value) => {
+      router.push('/');
+    }).catch((error) => {
+      console.log(error);
+    });
+};
+
+const formData = reactive({
+  email: '',
+  password: '',
+});
+
+const rules = {
+  email: { required, email },
+  password: { required },
+};
+
+const v$ = useVuelidate(rules, formData);
 
 onMounted(async () => {
   const currentUser = await getCurrentUser();
@@ -25,13 +60,11 @@ onMounted(async () => {
     router.push(to);
   }
 });
-
 </script>
 
 <template>
   <main class="mx-4 md:mx-8 lg:mx-16 xl:mx-32">
     <div class="py-16 w-full flex items-center justify-center flex-col space-y-4">
-
       <div class="max-w-lg w-full space-y-12">
         <h2 class="text-3xl font-semibold uppercase text-center">Login</h2>
 
@@ -41,21 +74,35 @@ onMounted(async () => {
             class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-6 py-3 bg-gray-800 hover:bg-gray-900 text-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
             Github
           </button>
+          <button @click="AuthWithGoogle"
+            class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-6 py-3 bg-white hover:bg-gray-50 text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+            Google
+          </button>
         </div>
 
         <!-- Manual -->
-        <form class="w-full flex flex-col space-y-6">
+        <form @submit.prevent="onSubmit" class="w-full flex flex-col space-y-6">
+          <ErrorAlert :errors="auth.loginErrors" />
           <div>
-            <label class="block">Email</label>
-            <input type="email" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-lg" />
+            <ErrorAlert :errors="v$.email.$errors" />
+            <div>
+              <label class="block">Email</label>
+              <input type="email" v-model="formData.email"
+                class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-lg" />
+            </div>
           </div>
           <div>
-            <label class="block">Password</label>
-            <input type="password" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-lg" />
+            <ErrorAlert :errors="v$.password.$errors" />
+            <div>
+              <label class="block">Password</label>
+              <input type="password" v-model="formData.password"
+                class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-lg" />
+            </div>
           </div>
 
-          <button type="submit"
-            class="w-full px-4 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded text-lg">Login</button>
+          <button type="submit" class="w-full px-4 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded text-lg">
+            Login
+          </button>
         </form>
 
         <router-link to="/register" class="block text-gray-600 hover:text-gray-800 text-center">
