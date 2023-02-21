@@ -17,19 +17,19 @@ export const useAuthStore = defineStore('auth', () => {
   const loginErrors = ref<Error[]>([]);
   const registerErrors = ref<Error[]>([]);
 
-  function login(email: string, password: string) {
-    signInWithEmailAndPassword(auth!, email, password)
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        auth!.updateCurrentUser(user);
-      })
-      .catch((error) => {
-        const errorCode: string = error.code;
-        const errorMessage: string = error.message;
+  async function login(email: string, password: string) {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth!, email, password);
+      // Signed in
+      const user = userCredential.user;
+      auth!.updateCurrentUser(user);
+    } catch(error) {
+      const errorCode: string = error.code;
+      const errorMessage: string = error.message;
 
-        loginErrors.value = [{ $message: errorMessage }];
-      });
+      loginErrors.value = [{ $message: errorMessage }];
+      throw error;
+    }
   }
 
   async function register(email: string, password: string) {

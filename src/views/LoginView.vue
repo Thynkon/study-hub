@@ -29,8 +29,12 @@ const onSubmit = async (e) => {
     return;
   }
 
-  await auth.login(formData.email, formData.password);
-  router.push('/');
+  auth.login(formData.email, formData.password)
+    .then((value) => {
+      router.push('/');
+    }).catch((error) => {
+      console.log(error);
+    });
 };
 
 const formData = reactive({
