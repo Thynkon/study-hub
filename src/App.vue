@@ -36,6 +36,11 @@ const handleLogout = async () => {
                   Other
                 </RouterLink>
               </li>
+              <li>
+                <RouterLink to="/subjects" class="py-2 px-4 text-gray-700 rounded bg-gray-100 hover:bg-gray-200">
+                  Subjects
+                </RouterLink>
+              </li>
             </ul>
           </div>
 
