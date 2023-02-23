@@ -1,6 +1,11 @@
-import { ref } from 'vue'
-import { defineStore } from 'pinia'
+import { ref } from 'vue';
+import { defineStore } from 'pinia';
+
 import { useFirebaseAuth } from 'vuefire';
+import { db } from '@/firebase';
+import { addDoc } from 'firebase/firestore';
+import { collection } from 'firebase/firestore';
+
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -19,11 +24,15 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function login(email: string, password: string) {
     try {
-      const userCredential = await signInWithEmailAndPassword(auth!, email, password);
-      // Signed in
+      const userCredential = await signInWithEmailAndPassword(
+        auth!,
+        email,
+        password
+      );
+
       const user = userCredential.user;
       auth!.updateCurrentUser(user);
-    } catch(error) {
+    } catch (error) {
       const errorCode: string = error.code;
       const errorMessage: string = error.message;
 
@@ -33,29 +42,31 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function register(email: string, password: string) {
-    createUserWithEmailAndPassword(auth!, email, password)
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        auth!.updateCurrentUser(user);
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth!,
+        email,
+        password
+      );
 
-        console.log(errorCode, errorMessage);
-        registerErrors.value = [{ $message: errorMessage }];
+      const user = userCredential.user;
+      auth!.updateCurrentUser(user);
+
+      await addDoc(collection(db, 'users'), {
+        uid: user.uid,
+        email: user.email,
       });
+    } catch (error) {
+      const errorCode: string = error.code;
+      const errorMessage: string = error.message;
+
+      registerErrors.value = [{ $message: errorMessage }];
+      throw error;
+    }
   }
 
   async function logout() {
-    signOut(auth!)
-      .then(() => {
-        // Sign-out successful.
-      })
-      .catch((error) => {
-        // An error happened.
-      });
+    signOut(auth!);
   }
 
   return { login, register, loginErrors, registerErrors, Error };

@@ -2,7 +2,6 @@
 import ErrorAlert from '@/components/ErrorAlert.vue';
 import GithubProvider from '@/providers/authentication/github';
 import GoogleProvider from '@/providers/authentication/google';
-import AuthProvider from '@/providers/authentication/manual';
 
 import router from '@/router';
 import { onMounted, reactive } from 'vue';
@@ -10,6 +9,7 @@ import { RouterLink, useRoute } from 'vue-router';
 import { getCurrentUser } from 'vuefire';
 import { email, required } from '@vuelidate/validators';
 import useVuelidate from '@vuelidate/core';
+
 import { useAuthStore } from '@/stores/auth';
 
 const route = useRoute();

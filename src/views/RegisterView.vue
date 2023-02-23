@@ -4,13 +4,15 @@ import useVuelidate from '@vuelidate/core';
 import { computed, reactive } from 'vue';
 import { RouterLink } from 'vue-router';
 import ErrorAlert from '@/components/ErrorAlert.vue';
-import AuthProvider from '@/providers/authentication/manual';
+
 import { useAuthStore } from '@/stores/auth';
 
-const onSubmit = async (e) => {
+const auth = useAuthStore();
+
+const onSubmit = async () => {
   const result = await v$.value.$validate();
   if (result) {
-    await AuthProvider.register(formData.email, formData.password);
+    await auth.register(formData.email, formData.password);
   } else {
     console.log(v$);
   }
@@ -29,7 +31,6 @@ const rules = computed(() => ({
 }));
 
 const v$ = useVuelidate(rules, formData);
-const auth = useAuthStore();
 
 </script>
 
