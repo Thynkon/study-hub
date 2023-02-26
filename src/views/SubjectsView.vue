@@ -3,19 +3,55 @@ import {
   Disclosure,
   DisclosureButton,
   DisclosurePanel,
-} from '@headlessui/vue'
+} from '@headlessui/vue';
 import { ChevronUpIcon, PencilIcon, TrashIcon } from '@heroicons/vue/20/solid';
 import { useCollection } from 'vuefire';
-import { collection } from 'firebase/firestore';
+import { collection, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '@/firebase';
+import { onMounted, ref } from 'vue';
+import Edit from '@/components/subjects/Edit.vue';
 
-const handleEdit = () => {
+const isOpen = ref(false);
+
+function closeModal() {
+  isOpen.value = false;
+}
+function openModal() {
+  isOpen.value = true;
+}
+
+type Author = {
+  name: string;
+  email: string;
+}
+
+type Subject = {
+  name: string;
+  description: string;
+  author: Author;
+}
+
+const handleEdit = (item) => {
+  console.log("Setting subject to ==> ");
+  console.log(item);
+  subject.value = item;
+  openModal();
 };
 
-const handleDelete = () => {
+const handleDelete = (subject) => {
+  // Delete subject from subjects collection
+  deleteDoc(doc(db, 'subjects', subject.id));
 };
 
-const subjects = useCollection(collection(db, 'subjects'))
+const subjects = useCollection(collection(db, 'subjects'));
+const subject = ref({} as Subject);
+
+onMounted(async () => {
+  subjects.value.forEach((subject) => {
+    console.log("Subject from firebase ==> ");
+    console.log(subject);
+  });
+});
 </script>
 
 <template>
@@ -32,11 +68,12 @@ const subjects = useCollection(collection(db, 'subjects'))
             {{ subject.description }}
           </div>
           <div class="flex justify-end space-x-2">
-            <PencilIcon class="h-5 w-5 cursor-pointer" @click="handleEdit" />
-            <TrashIcon class="h-5 w-5 cursor-pointer" @click="handleDelete" />
+            <PencilIcon class="h-5 w-5 cursor-pointer" @click="handleEdit(subject)" />
+            <TrashIcon class="h-5 w-5 cursor-pointer" @click="handleDelete(subject)" />
           </div>
         </DisclosurePanel>
       </Disclosure>
+      <Edit :isOpen="isOpen" :closeModal="closeModal" :subject="subject" :key="subject.name" />
     </div>
   </div>
 </template>
