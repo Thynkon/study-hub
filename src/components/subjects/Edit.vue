@@ -12,12 +12,17 @@ import { required } from '@vuelidate/validators';
 import { onMounted, reactive } from 'vue';
 import { doc, updateDoc } from '@firebase/firestore';
 import { db } from '@/firebase';
+import ErrorAlert from '../ErrorAlert.vue';
+import { useSubjectsStore } from '@/stores/subjects';
+import SuccessAlert from '../SuccessAlert.vue';
 
 const props = defineProps<{
   subject: any;
   isOpen: boolean;
   closeModal: () => void;
 }>();
+
+const subjectsStore = useSubjectsStore();
 
 const onSubmit = async (e) => {
   const result = await v$.value.$validate();
@@ -27,10 +32,12 @@ const onSubmit = async (e) => {
   }
 
   // Update subject in subjects collection
-  await updateDoc(doc(db, 'subjects', props.subject.id), {
+  await subjectsStore.updateSubject(props.subject, {
     name: formData.name,
     description: formData.description,
   });
+
+  props.closeModal();
 };
 
 const formData = {
@@ -40,7 +47,7 @@ const formData = {
 
 const rules = {
   name: { required },
-  description: { required },
+  description: {},
 };
 
 const v$ = useVuelidate(rules, formData);
@@ -78,9 +85,9 @@ onMounted(async () => {
                       <div>
                         <ErrorAlert :errors="v$.name.$errors" />
                         <div>
-                          <label for="company-website" class="block text-sm font-medium text-gray-700">Name</label>
+                          <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
                           <div class="mt-1 flex rounded-md shadow-sm">
-                            <input type="text"
+                            <input type="text" id="name"
                               class="w-full rounded-md ring-2 ring-gray-100 focus:ring-gray-200 sm:text-sm p-2"
                               v-model="formData.name" />
                           </div>
@@ -88,13 +95,15 @@ onMounted(async () => {
                       </div>
 
                       <div>
-                        <ErrorAlert :errors="v$.description.$errors" />
                         <div>
-                          <label for="about" class="block text-sm font-medium text-gray-700">Description</label>
+                          <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
                           <div class="mt-1">
-                            <textarea id="about" rows="3" v-model="formData.description"
+                            <textarea id="description" rows="3" v-model="formData.description"
                               class="mt-1 w-full rounded-md ring-2 ring-gray-100 focus:ring-gray-200 shadow-sm focus:border-gray-500 sm:text-sm p-2"></textarea>
                           </div>
+                        </div>
+                        <div class="mt-4">
+                          <ErrorAlert :errors="v$.description.$errors" />
                         </div>
                       </div>
                     </div>

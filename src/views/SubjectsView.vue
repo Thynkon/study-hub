@@ -10,6 +10,8 @@ import { collection, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '@/firebase';
 import { onMounted, ref } from 'vue';
 import Edit from '@/components/subjects/Edit.vue';
+import { useSubjectsStore } from '@/stores/subjects';
+import SuccessAlert from '@/components/SuccessAlert.vue';
 
 const isOpen = ref(false);
 
@@ -31,6 +33,8 @@ type Subject = {
   author: Author;
 }
 
+const subjectsStore = useSubjectsStore();
+
 const handleEdit = (item) => {
   console.log("Setting subject to ==> ");
   console.log(item);
@@ -40,7 +44,7 @@ const handleEdit = (item) => {
 
 const handleDelete = (subject) => {
   // Delete subject from subjects collection
-  deleteDoc(doc(db, 'subjects', subject.id));
+  subjectsStore.deleteSubject(subject);
 };
 
 const subjects = useCollection(collection(db, 'subjects'));
@@ -57,6 +61,7 @@ onMounted(async () => {
 <template>
   <div class="w-full pt-16">
     <div class="mx-auto w-full rounded-2xl bg-white space-y-4">
+      <SuccessAlert :successes="subjectsStore.messages" :key="subjectsStore.messages.length" />
       <Disclosure v-slot="{ open }" v-for="subject in subjects" :key="subject.id">
         <DisclosureButton
           class="flex w-full justify-between rounded-lg bg-gray-100 px-4 py-2 text-left text-sm font-medium text-black-900 hover:bg-gray-200 focus:outline-none focus-visible:ring focus-visible:ring-black-500 focus-visible:ring-opacity-75">
