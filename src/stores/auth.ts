@@ -6,11 +6,7 @@ import { db } from '@/firebase';
 import { addDoc } from 'firebase/firestore';
 import { collection } from 'firebase/firestore';
 
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-} from 'firebase/auth';
+import { createUserWithEmailAndPassword, signOut } from 'firebase/auth';
 
 const auth = useFirebaseAuth();
 
@@ -22,21 +18,11 @@ export const useAuthStore = defineStore('auth', () => {
   const loginErrors = ref<Error[]>([]);
   const registerErrors = ref<Error[]>([]);
 
-  async function login(email: string, password: string) {
+  async function login(login: Function) {
     try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth!,
-        email,
-        password
-      );
-
-      const user = userCredential.user;
-      auth!.updateCurrentUser(user);
+      await login();
     } catch (error) {
-      const errorCode: string = error.code;
-      const errorMessage: string = error.message;
-
-      loginErrors.value = [{ $message: errorMessage }];
+      loginErrors.value = [{ $message: error.message }];
       throw error;
     }
   }
@@ -57,17 +43,14 @@ export const useAuthStore = defineStore('auth', () => {
         email: user.email,
       });
     } catch (error) {
-      const errorCode: string = error.code;
-      const errorMessage: string = error.message;
-
-      registerErrors.value = [{ $message: errorMessage }];
+      registerErrors.value = [{ $message: error.message }];
       throw error;
     }
   }
 
   async function logout() {
-    signOut(auth!);
+    await signOut(auth!);
   }
 
-  return { login, register, loginErrors, registerErrors, Error };
+  return { login, register, logout, loginErrors, registerErrors, Error };
 });

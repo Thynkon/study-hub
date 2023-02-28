@@ -2,51 +2,34 @@ import { useFirebaseAuth } from 'vuefire';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  signOut,
 } from 'firebase/auth';
 
 const auth = useFirebaseAuth();
 
 export default class AuthProvider {
-  public static async register(email: string, password: string) {
-    createUserWithEmailAndPassword(auth!, email, password)
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        auth!.updateCurrentUser(user);
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-
-        console.log(errorCode, errorMessage);
-        // TODO: Display error in the view
-      });
-  }
-
   public static async login(email: string, password: string) {
-    signInWithEmailAndPassword(auth!, email, password)
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        auth!.updateCurrentUser(user);
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
+    return async () => {
+      const userCredential = await signInWithEmailAndPassword(
+        auth!,
+        email,
+        password
+      );
 
-        console.log(errorCode, errorMessage);
-        // TODO: Display error in the view
-      });
+      const user = userCredential.user;
+      auth!.updateCurrentUser(user);
+    };
   }
 
-  public static async logout() {
-    signOut(auth!)
-      .then(() => {
-        // Sign-out successful.
-      })
-      .catch((error) => {
-        // An error happened.
-      });
+  public static async register(email: string, password: string) {
+    return async () => {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth!,
+        email,
+        password
+      );
+
+      const user = userCredential.user;
+      auth!.updateCurrentUser(user);
+    };
   }
 }
