@@ -8,7 +8,7 @@ import { ChevronUpIcon, PencilIcon, TrashIcon } from '@heroicons/vue/20/solid';
 import { useCollection } from 'vuefire';
 import { collection, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '@/firebase';
-import { onMounted, ref } from 'vue';
+import { onMounted, onUpdated, ref } from 'vue';
 import Edit from '@/components/subjects/Edit.vue';
 import { useSubjectsStore } from '@/stores/subjects';
 import SuccessAlert from '@/components/SuccessAlert.vue';
@@ -56,12 +56,15 @@ onMounted(async () => {
     console.log(subject);
   });
 });
+
 </script>
 
 <template>
   <div class="w-full pt-16">
     <div class="mx-auto w-full rounded-2xl bg-white space-y-4">
-      <SuccessAlert :successes="subjectsStore.messages" :key="subjectsStore.messages.length" />
+
+      <SuccessAlert position="top right" group="subjects" />
+
       <Disclosure v-slot="{ open }" v-for="subject in subjects" :key="subject.id">
         <DisclosureButton
           class="flex w-full justify-between rounded-lg bg-gray-100 px-4 py-2 text-left text-sm font-medium text-black-900 hover:bg-gray-200 focus:outline-none focus-visible:ring focus-visible:ring-black-500 focus-visible:ring-opacity-75">
@@ -69,9 +72,7 @@ onMounted(async () => {
           <ChevronUpIcon :class="open ? 'rotate-180 transform' : ''" class="h-5 w-5 text-gray-500" />
         </DisclosureButton>
         <DisclosurePanel class="px-4 pt-4 pb-2 text-sm text-gray-500 flex flex-col space-y-2">
-          <div class="border border-gray-200 p-2 rounded-lg">
-            {{ subject.description }}
-          </div>
+          <textarea class="border border-gray-200 p-2 rounded-lg" readonly>{{ subject.description }}</textarea>
           <div class="flex justify-end space-x-2">
             <PencilIcon class="h-5 w-5 cursor-pointer" @click="handleEdit(subject)" />
             <TrashIcon class="h-5 w-5 cursor-pointer" @click="handleDelete(subject)" />

@@ -80,37 +80,35 @@ onMounted(async () => {
               <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900">Edit</DialogTitle>
               <div class="mt-2">
                 <form @submit.prevent="onSubmit">
-                  <div class="shadow sm:overflow-hidden sm:rounded-md">
-                    <div class="space-y-6 bg-white px-4 py-5 sm:p-6">
+                  <div class="space-y-6 bg-white py-5">
+                    <div>
+                      <ErrorAlert :errors="v$.name.$errors" />
                       <div>
-                        <ErrorAlert :errors="v$.name.$errors" />
-                        <div>
-                          <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-                          <div class="mt-1 flex rounded-md shadow-sm">
-                            <input type="text" id="name"
-                              class="w-full rounded-md ring-2 ring-gray-100 focus:ring-gray-200 sm:text-sm p-2"
-                              v-model="formData.name" />
-                          </div>
+                        <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                        <div class="mt-1 flex rounded-md shadow-sm">
+                          <input type="text" id="name"
+                            class="w-full rounded-md ring-2 ring-gray-100 focus:ring-gray-200 sm:text-sm p-2"
+                            v-model="formData.name" />
                         </div>
                       </div>
+                    </div>
 
+                    <div>
                       <div>
-                        <div>
-                          <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
-                          <div class="mt-1">
-                            <textarea id="description" rows="3" v-model="formData.description"
-                              class="mt-1 w-full rounded-md ring-2 ring-gray-100 focus:ring-gray-200 shadow-sm focus:border-gray-500 sm:text-sm p-2"></textarea>
-                          </div>
-                        </div>
-                        <div class="mt-4">
-                          <ErrorAlert :errors="v$.description.$errors" />
+                        <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                        <div class="mt-1">
+                          <textarea id="description" rows="3" v-model="formData.description"
+                            class="mt-1 w-full rounded-md ring-2 ring-gray-100 focus:ring-gray-200 shadow-sm focus:border-gray-500 sm:text-sm p-2"></textarea>
                         </div>
                       </div>
+                      <div class="mt-4">
+                        <ErrorAlert :errors="v$.description.$errors" />
+                      </div>
                     </div>
-                    <div class="bg-gray-50 px-4 py-3 text-right sm:px-6">
-                      <button type="submit"
-                        class="inline-flex justify-center rounded-md border border-transparent bg-gray-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">Save</button>
-                    </div>
+                  </div>
+                  <div class="text-right">
+                    <button type="submit"
+                      class="inline-flex justify-center rounded-md border border-transparent bg-gray-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">Save</button>
                   </div>
                 </form>
               </div>

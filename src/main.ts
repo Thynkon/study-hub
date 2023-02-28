@@ -1,14 +1,15 @@
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
-import { VueFire, VueFireAuth } from 'vuefire'
-import { firebaseApp } from './firebase'
+import { createApp } from 'vue';
+import { createPinia } from 'pinia';
+import { VueFire, VueFireAuth } from 'vuefire';
+import { firebaseApp } from './firebase';
+import Notifications from '@kyvg/vue3-notification';
 
-import App from './App.vue'
-import router from './router'
+import App from './App.vue';
+import router from './router';
 
-import './assets/main.css'
+import './assets/main.css';
 
-const app = createApp(App)
+const app = createApp(App);
 
 app.use(VueFire, {
     firebaseApp: firebaseApp,
@@ -16,9 +17,10 @@ app.use(VueFire, {
         // ... other modules
         VueFireAuth(),
     ],
-})
+});
 
-app.use(createPinia())
-app.use(router)
+app.use(createPinia());
+app.use(router);
+app.use(Notifications);
 
-app.mount('#app')
+app.mount('#app');

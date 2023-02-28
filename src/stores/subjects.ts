@@ -1,32 +1,19 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { useFirebaseAuth } from 'vuefire';
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-} from 'firebase/auth';
 import { db } from '@/firebase';
 import { deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { useNotification } from "@kyvg/vue3-notification";
+const { notify } = useNotification()
 
 const auth = useFirebaseAuth();
 
-export type Error = {
+export type Message = {
   $message: string;
+  type: number;
 };
 
 export const useSubjectsStore = defineStore('subjects', () => {
-  const errors = ref<Error[]>([]);
-  const messages = ref<String[]>([]);
-
-  function resetErrors() {
-    errors.value = [];
-  }
-
-  function resetMessages() {
-    messages.value = [];
-  }
-
   async function updateSubject(subject, data) {
     // Update subject in subjects collection
     updateDoc(doc(db, 'subjects', subject.id), {
@@ -34,16 +21,22 @@ export const useSubjectsStore = defineStore('subjects', () => {
       description: data.description,
     });
 
-    messages.value = ['Subject updated successfully'];
-    resetErrors();
+    notify({
+      type: "success",
+      group: "subjects",
+      title: "Subject updated successfully",
+    });
   }
 
   function deleteSubject(subject: any) {
     // Delete subject
     deleteDoc(doc(db, 'subjects', subject.id));
-    messages.value = ['Subject deleted successfully'];
-    resetErrors();
+    notify({
+      type: "success",
+      group: "subjects",
+      title: "Subject deleted successfully",
+    });
   }
 
-  return { Error, updateSubject, deleteSubject, messages, errors };
+  return { updateSubject, deleteSubject };
 });
