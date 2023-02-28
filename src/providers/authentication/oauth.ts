@@ -6,8 +6,7 @@ import {
   GithubAuthProvider,
   getAdditionalUserInfo,
 } from 'firebase/auth';
-import { addDoc, collection } from 'firebase/firestore';
-import { db } from '@/firebase';
+import { useAuthStore } from '@/stores/auth';
 
 type providers = GoogleAuthProvider | GithubAuthProvider;
 
@@ -29,9 +28,8 @@ export default class OAuthProvider {
         auth?.updateCurrentUser(user);
 
         if (getAdditionalUserInfo(result)?.isNewUser) {
-          await addDoc(collection(db, 'users'), {
-            uid: user.uid,
-            email: user.email,
+          useAuthStore().register(() => {
+            return user;
           });
         }
       }

@@ -30,6 +30,8 @@ export default class AuthProvider {
 
       const user = userCredential.user;
       auth!.updateCurrentUser(user);
+
+      return user;
     };
   }
 }

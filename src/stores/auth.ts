@@ -5,8 +5,7 @@ import { useFirebaseAuth } from 'vuefire';
 import { db } from '@/firebase';
 import { addDoc } from 'firebase/firestore';
 import { collection } from 'firebase/firestore';
-
-import { createUserWithEmailAndPassword, signOut } from 'firebase/auth';
+import { signOut } from '@firebase/auth';
 
 const auth = useFirebaseAuth();
 
@@ -27,16 +26,9 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  async function register(email: string, password: string) {
+  async function register(register: Function) {
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth!,
-        email,
-        password
-      );
-
-      const user = userCredential.user;
-      auth!.updateCurrentUser(user);
+      const user = await register();
 
       await addDoc(collection(db, 'users'), {
         uid: user.uid,

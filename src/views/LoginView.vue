@@ -18,11 +18,11 @@ const route = useRoute();
 const auth = useAuthStore();
 
 const AuthWithGithub = async () => {
-  await handleLogin(() => GithubProvider.auth());
+  await handleLogin(GithubProvider.auth);
 };
 
 const AuthWithGoogle = async () => {
-  await handleLogin(() => GoogleProvider.auth());
+  await handleLogin(GoogleProvider.auth);
 };
 
 const LoginWithForm = async () => {

@@ -8,15 +8,16 @@ import { computed, reactive } from 'vue';
 import { RouterLink } from 'vue-router';
 
 import { useAuthStore } from '@/stores/auth';
+import AuthProvider from '@/providers/authentication/manual';
 
 const auth = useAuthStore();
 
-const onSubmit = async () => {
+const handleRegister = async () => {
   const result = await v$.value.$validate();
   if (!result) return;
 
   await auth
-    .register(formData.email, formData.password)
+    .register(await AuthProvider.register(formData.email, formData.password))
     .then(() => {
       router.push('/');
     })
@@ -50,7 +51,7 @@ const v$ = useVuelidate(rules, formData);
       </div>
 
       <form
-        @submit.prevent="onSubmit"
+        @submit.prevent="handleRegister()"
         class="max-w-lg w-full flex flex-col space-y-6"
       >
         <ErrorAlert :errors="auth.registerErrors" />
