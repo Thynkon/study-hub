@@ -5,12 +5,7 @@ import { useFirebaseAuth } from 'vuefire';
 import { db } from '@/firebase';
 import { addDoc } from 'firebase/firestore';
 import { collection } from 'firebase/firestore';
-
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-} from 'firebase/auth';
+import { signOut } from '@firebase/auth';
 
 const auth = useFirebaseAuth();
 
@@ -22,52 +17,32 @@ export const useAuthStore = defineStore('auth', () => {
   const loginErrors = ref<Error[]>([]);
   const registerErrors = ref<Error[]>([]);
 
-  async function login(email: string, password: string) {
+  async function login(login: Function) {
     try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth!,
-        email,
-        password
-      );
-
-      const user = userCredential.user;
-      auth!.updateCurrentUser(user);
+      await login();
     } catch (error) {
-      const errorCode: string = error.code;
-      const errorMessage: string = error.message;
-
-      loginErrors.value = [{ $message: errorMessage }];
+      loginErrors.value = [{ $message: error.message }];
       throw error;
     }
   }
 
-  async function register(email: string, password: string) {
+  async function register(register: Function) {
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth!,
-        email,
-        password
-      );
-
-      const user = userCredential.user;
-      auth!.updateCurrentUser(user);
+      const user = await register();
 
       await addDoc(collection(db, 'users'), {
         uid: user.uid,
         email: user.email,
       });
     } catch (error) {
-      const errorCode: string = error.code;
-      const errorMessage: string = error.message;
-
-      registerErrors.value = [{ $message: errorMessage }];
+      registerErrors.value = [{ $message: error.message }];
       throw error;
     }
   }
 
   async function logout() {
-    signOut(auth!);
+    await signOut(auth!);
   }
 
-  return { login, register, loginErrors, registerErrors, Error };
+  return { login, register, logout, loginErrors, registerErrors, Error };
 });
