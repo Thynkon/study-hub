@@ -3,8 +3,7 @@ import { defineStore } from 'pinia';
 
 import { useFirebaseAuth } from 'vuefire';
 import { db } from '@/firebase';
-import { addDoc } from 'firebase/firestore';
-import { collection } from 'firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore';
 import { signOut } from '@firebase/auth';
 
 const auth = useFirebaseAuth();
@@ -30,8 +29,9 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       const user = await register();
 
-      await addDoc(collection(db, 'users'), {
-        uid: user.uid,
+      // Add document to users collection with specific document id
+      await setDoc(doc(db, 'users', user.uid), {
+        name: user.displayName,
         email: user.email,
       });
     } catch (error) {

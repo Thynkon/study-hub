@@ -3,7 +3,13 @@ import ErrorAlert from '@/components/ErrorAlert.vue';
 
 import router from '@/router';
 import useVuelidate from '@vuelidate/core';
-import { email, minLength, required, sameAs } from '@vuelidate/validators';
+import {
+  email,
+  maxLength,
+  minLength,
+  required,
+  sameAs,
+} from '@vuelidate/validators';
 import { computed, reactive } from 'vue';
 import { RouterLink } from 'vue-router';
 
@@ -17,7 +23,13 @@ const handleRegister = async () => {
   if (!result) return;
 
   await auth
-    .register(await AuthProvider.register(formData.email, formData.password))
+    .register(
+      await AuthProvider.register(
+        formData.name,
+        formData.email,
+        formData.password
+      )
+    )
     .then(() => {
       router.push('/');
     })
@@ -27,12 +39,14 @@ const handleRegister = async () => {
 };
 
 const formData = reactive({
+  name: '',
   email: '',
   password: '',
   passwordConfirmation: '',
 });
 
 const rules = computed(() => ({
+  name: { required, maxLength: maxLength(20) },
   email: { required, email },
   password: { required, minLength: minLength(6) },
   passwordConfirmation: { required, sameAsPassword: sameAs(formData.password) },
@@ -55,6 +69,19 @@ const v$ = useVuelidate(rules, formData);
         class="max-w-lg w-full flex flex-col space-y-6"
       >
         <ErrorAlert :errors="auth.registerErrors" />
+
+        <div class="space-y-4">
+          <ErrorAlert :errors="v$.name.$errors" />
+
+          <div class="space-y-4">
+            <label>Name</label>
+            <input
+              type="text"
+              v-model="formData.name"
+              class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-lg"
+            />
+          </div>
+        </div>
 
         <div class="space-y-4">
           <ErrorAlert :errors="v$.email.$errors" />

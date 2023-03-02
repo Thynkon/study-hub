@@ -1,4 +1,4 @@
-import { useFirebaseAuth } from 'vuefire';
+import { updateCurrentUserProfile, useFirebaseAuth } from 'vuefire';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -20,16 +20,17 @@ export default class AuthProvider {
     };
   }
 
-  public static async register(email: string, password: string) {
+  public static async register(name: string, email: string, password: string) {
     return async () => {
       const userCredential = await createUserWithEmailAndPassword(
         auth!,
         email,
         password
       );
-
       const user = userCredential.user;
-      auth!.updateCurrentUser(user);
+
+      await updateCurrentUserProfile({ displayName: name });
+      await auth!.updateCurrentUser(user);
 
       return user;
     };
