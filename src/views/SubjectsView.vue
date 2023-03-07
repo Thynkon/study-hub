@@ -1,26 +1,18 @@
 <script setup lang="ts">
+import SuccessAlert from '@/components/SuccessAlert.vue';
+import Edit from '@/components/subjects/Edit.vue';
+import New from '@/components/subjects/New.vue';
+import { db } from '@/firebase';
+import { useSubjectsStore } from '@/stores/subjects';
 import {
   Disclosure,
   DisclosureButton,
   DisclosurePanel,
 } from '@headlessui/vue';
 import { ChevronUpIcon, PencilIcon, TrashIcon } from '@heroicons/vue/20/solid';
+import { collection } from 'firebase/firestore';
+import { ref } from 'vue';
 import { useCollection } from 'vuefire';
-import { collection, deleteDoc, doc } from 'firebase/firestore';
-import { db } from '@/firebase';
-import { onMounted, onUpdated, ref } from 'vue';
-import Edit from '@/components/subjects/Edit.vue';
-import { useSubjectsStore } from '@/stores/subjects';
-import SuccessAlert from '@/components/SuccessAlert.vue';
-
-const isOpen = ref(false);
-
-function closeModal() {
-  isOpen.value = false;
-}
-function openModal() {
-  isOpen.value = true;
-}
 
 type Author = {
   name: string;
@@ -33,13 +25,26 @@ type Subject = {
   author: Author;
 }
 
+function closeCreateForm() {
+  isCreateForm.value = false;
+}
+
+function closeEditForm() {
+  isEditForm.value = false;
+}
+
 const subjectsStore = useSubjectsStore();
+
+const handleCreate = () => {
+  isCreateForm.value = true;
+};
 
 const handleEdit = (item) => {
   console.log("Setting subject to ==> ");
   console.log(item);
   subject.value = item;
-  openModal();
+  isEditForm.value = true;
+  //openModal();
 };
 
 const handleDelete = (subject) => {
@@ -50,13 +55,8 @@ const handleDelete = (subject) => {
 const subjects = useCollection(collection(db, 'subjects'));
 const subject = ref({} as Subject);
 
-onMounted(async () => {
-  subjects.value.forEach((subject) => {
-    console.log("Subject from firebase ==> ");
-    console.log(subject);
-  });
-});
-
+const isCreateForm = ref(false);
+const isEditForm = ref(false);
 </script>
 
 <template>
@@ -64,6 +64,14 @@ onMounted(async () => {
     <div class="mx-auto w-full rounded-2xl bg-white space-y-4">
 
       <SuccessAlert position="top right" group="subjects" />
+
+      <div class="flex justify-end">
+        <button class="primary-button" @click.prevent="handleCreate">
+          Add Subject
+        </button>
+
+        <New :isOpen="isCreateForm" :closeModal="closeCreateForm" />
+      </div>
 
       <Disclosure v-slot="{ open }" v-for="subject in subjects" :key="subject.id">
         <DisclosureButton
@@ -79,7 +87,7 @@ onMounted(async () => {
           </div>
         </DisclosurePanel>
       </Disclosure>
-      <Edit :isOpen="isOpen" :closeModal="closeModal" :subject="subject" :key="subject.name" />
+      <Edit :isOpen="isEditForm" :closeModal="closeEditForm" :subject="subject" :key="subject.name" />
     </div>
   </div>
 </template>

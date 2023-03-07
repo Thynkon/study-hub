@@ -8,28 +8,27 @@ import {
   DialogTitle,
 } from '@headlessui/vue';
 import { required } from '@vuelidate/validators';
-import { onMounted, reactive } from 'vue';
+import { reactive } from 'vue';
 import ErrorAlert from '../ErrorAlert.vue';
 import { useSubjectsStore } from '@/stores/subjects';
 
 const props = defineProps<{
-  subject: any;
   isOpen: boolean;
   closeModal: () => void;
 }>();
 
 const subjectsStore = useSubjectsStore();
 
-const onSubmit = async (e) => {
+const onSubmit = async () => {
   const result = await v$.value.$validate();
   if (!result) {
     console.log("Validation failed");
     return;
   }
 
-  // Update subject in subjects collection
-  await subjectsStore.updateSubject(props.subject, {
+  await subjectsStore.createSubject({
     name: formData.name,
+    slug: formData.slug,
     description: formData.description,
   });
 
@@ -38,24 +37,17 @@ const onSubmit = async (e) => {
 
 const formData = reactive({
   name: '',
+  slug: '',
   description: '',
 });
 
 const rules = {
   name: { required },
+  slug: { required },
   description: {},
 };
 
 const v$ = useVuelidate(rules, formData);
-
-onMounted(async () => {
-  console.log("Current subject ==> ");
-  console.log(props);
-  formData.name = props.subject.name;
-  formData.description = props.subject.description;
-  console.log("Formdata set to ==> ");
-  console.log(formData);
-});
 </script>
 
 <template>
@@ -73,10 +65,12 @@ onMounted(async () => {
             leave-to="opacity-0 scale-95">
             <DialogPanel
               class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-              <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900">Edit</DialogTitle>
+              <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900">New</DialogTitle>
               <div class="mt-2">
                 <form @submit.prevent="onSubmit">
                   <div class="space-y-6 bg-white py-5">
+
+                    <!-- Name -->
                     <div>
                       <ErrorAlert :errors="v$.name.$errors" />
                       <div>
@@ -89,6 +83,20 @@ onMounted(async () => {
                       </div>
                     </div>
 
+                    <!-- Slug -->
+                    <div>
+                      <ErrorAlert :errors="v$.slug.$errors" />
+                      <div>
+                        <label for="slug" class="block text-sm font-medium text-gray-700">Slug</label>
+                        <div class="mt-1 flex rounded-md shadow-sm">
+                          <input type="text" id="slug"
+                            class="w-full rounded-md ring-2 ring-gray-100 focus:ring-gray-200 sm:text-sm p-2"
+                            v-model="formData.slug" />
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Description -->
                     <div>
                       <div>
                         <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
