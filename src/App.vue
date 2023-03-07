@@ -8,7 +8,7 @@ import ProfileIcon from '@/components/icons/ProfileIcon.vue';
 import HamburgerIcon from '@/components/icons/HamburgerIcon.vue';
 
 const Route = (name: string, path: string) => ({ name, path });
-const routes = [Route('Page 1', '/page1'), Route('Page 2', '/page2')];
+const routes = router.getRoutes().filter((route) => route.meta?.inNavbar);
 
 const user = useCurrentUser();
 
@@ -36,11 +36,8 @@ const handleLogout = async () => {
             <div class="hidden md:flex justify-center items-center">
               <ul class="grow flex items-center gap-4">
                 <li v-for="route in routes" :key="route.name">
-                  <RouterLink
-                    :to="route.path"
-                    class="py-2 px-4 text-gray-700 hover:border-b-4 border-blue-500"
-                    active-class="bg-blue-100 text-blue-500 rounded"
-                  >
+                  <RouterLink :to="route.path" class="py-2 px-4 text-gray-700 hover:border-b-4 border-blue-500"
+                    active-class="bg-blue-100 text-blue-500 rounded">
                     {{ route.name }}
                   </RouterLink>
                 </li>
@@ -52,27 +49,18 @@ const handleLogout = async () => {
                   <ProfileIcon />
                 </template>
                 <template #content>
-                  <div
-                    class="absolute w-44 right-0 mt-2 p-2 bg-white rounded-lg border border-gray-200 shadow-md"
-                  >
+                  <div class="absolute w-44 right-0 mt-2 p-2 bg-white rounded-lg border border-gray-200 shadow-md">
                     <div class="space-y-4">
                       <h4 class="text-lg">{{ user.displayName }}</h4>
-                      <button
-                        @click="handleLogout()"
-                        type="button"
-                        class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
-                      >
+                      <button @click="handleLogout()" type="button"
+                        class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
                         Logout
                       </button>
                     </div>
                   </div>
                 </template>
               </Dropdown>
-              <RouterLink
-                v-else
-                to="/login"
-                class="py-2 px-4 text-white bg-blue-600 hover:bg-blue-700 rounded"
-              >
+              <RouterLink v-else to="/login" class="py-2 px-4 text-white bg-blue-600 hover:bg-blue-700 rounded">
                 Login
               </RouterLink>
             </div>
@@ -86,25 +74,17 @@ const handleLogout = async () => {
               </template>
               <template #content>
                 <div
-                  class="absolute top-[var(--h-navbar)] left-0 py-8 inset-x-0 bg-white border border-gray-200 shadow-md"
-                >
+                  class="absolute top-[var(--h-navbar)] left-0 py-8 inset-x-0 bg-white border border-gray-200 shadow-md">
                   <div class="space-y-8">
                     <div class="mx-2 flex flex-col gap-4">
-                      <RouterLink
-                        v-for="route in routes"
-                        :key="route.name"
-                        :to="route.path"
-                        class="px-4 py-3 text-lg"
-                        active-class="bg-blue-100 text-blue-500"
-                      >
+                      <RouterLink v-for="route in routes" :key="route.name" :to="route.path" class="px-4 py-3 text-lg"
+                        active-class="bg-blue-100 text-blue-500">
                         {{ route.name }}
                       </RouterLink>
                     </div>
 
                     <!-- User Actions -->
-                    <div
-                      class="mx-2 py-4 flex flex-col gap-8 border-t-2 border-gray-600"
-                    >
+                    <div class="mx-2 py-4 flex flex-col gap-8 border-t-2 border-gray-600">
                       <div v-if="user" class="flex flex-col space-y-4">
                         <div class="space-x-2">
                           <span class="py-4">Logged as</span>
@@ -112,10 +92,8 @@ const handleLogout = async () => {
                             user.displayName
                           }}</span>
                         </div>
-                        <button
-                          @click="handleLogout()"
-                          class="bg-red-500 hover:bg-red-600 text-white font-bold p-4 rounded"
-                        >
+                        <button @click="handleLogout()"
+                          class="bg-red-500 hover:bg-red-600 text-white font-bold p-4 rounded">
                           Logout
                         </button>
                       </div>

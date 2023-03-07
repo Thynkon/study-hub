@@ -2,7 +2,7 @@ import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import { VueFire, VueFireAuth } from 'vuefire';
 import { firebaseApp } from './firebase';
-
+import Notifications from '@kyvg/vue3-notification';
 import App from './App.vue';
 import router from './router';
 
@@ -20,5 +20,6 @@ app.use(VueFire, {
 
 app.use(createPinia());
 app.use(router);
+app.use(Notifications);
 
 app.mount('#app');
