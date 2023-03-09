@@ -7,6 +7,7 @@ const RegisterView = () => import('@/views/auth/RegisterView.vue');
 
 const SubjectsView = () => import('@/views/SubjectsView.vue');
 const SubjectView = () => import('@/views/SubjectView.vue');
+const ExercisesView = () => import('@/views/ExercisesView.vue');
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -39,6 +40,14 @@ const router = createRouter({
       name: 'subject',
       component: SubjectView,
       props: true,
+    },
+    {
+      path: '/exercises',
+      name: 'exercises',
+      component: ExercisesView,
+      meta: {
+        inNavbar: true,
+      }
     },
   ],
 });
