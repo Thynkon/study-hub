@@ -1,7 +1,8 @@
 <script setup lang="ts">
+import { ref } from 'vue';
+import router from '@/router';
 import { db } from '@/firebase';
 import { collection } from 'firebase/firestore';
-import { ref } from 'vue';
 import { useCollection } from 'vuefire';
 
 import type Subject from '@/models/subject';
@@ -9,20 +10,11 @@ import type Subject from '@/models/subject';
 import SuccessAlert from '@/components/SuccessAlert.vue';
 
 import SubjectCard from '@/components/SubjectCard.vue';
-import New from '@/components/subjects/New.vue';
-import router from '@/router';
+import SubjectCreationModal from '@/components/subjects/CreationModal.vue';
 
 const subjects = useCollection(collection(db, 'subjects'));
 
 const isCreationModalOpen = ref(false);
-
-const handleCreate = () => {
-  isCreationModalOpen.value = true;
-};
-
-function closeCreateForm() {
-  isCreationModalOpen.value = false;
-}
 </script>
 
 <template>
@@ -37,11 +29,14 @@ function closeCreateForm() {
             <h2 class="text-2xl font-bold text-gray-900">Subjects</h2>
           </div>
 
-          <button class="primary-button" @click.prevent="handleCreate">
+          <button class="primary-button" @click="isCreationModalOpen = true">
             New
           </button>
 
-          <New :isOpen="isCreationModalOpen" :closeModal="closeCreateForm" />
+          <SubjectCreationModal
+            :isOpen="isCreationModalOpen"
+            :closeModal="() => (isCreationModalOpen = false)"
+          />
         </div>
 
         <!-- Subjects list -->
