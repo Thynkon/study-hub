@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import HomeView from '../views/HomeView.vue';
 import { getCurrentUser } from 'vuefire';
 
-const LoginView = () => import('@/views/LoginView.vue');
-const RegisterView = () => import('@/views/RegisterView.vue');
+import HomeView from '@/views/HomeView.vue';
+const LoginView = () => import('@/views/auth/LoginView.vue');
+const RegisterView = () => import('@/views/auth/RegisterView.vue');
 const SubjectsView = () => import('@/views/SubjectsView.vue');
 
 const router = createRouter({
@@ -13,25 +13,16 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView,
-      meta: {
-        inNavbar: false,
-      }
     },
     {
       path: '/login',
       name: 'login',
       component: LoginView,
-      meta: {
-        inNavbar: false,
-      }
     },
     {
       path: '/register',
       name: 'register',
       component: RegisterView,
-      meta: {
-        inNavbar: false,
-      }
     },
     {
       path: '/subjects',
