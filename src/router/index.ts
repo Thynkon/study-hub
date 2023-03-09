@@ -4,7 +4,9 @@ import { getCurrentUser } from 'vuefire';
 import HomeView from '@/views/HomeView.vue';
 const LoginView = () => import('@/views/auth/LoginView.vue');
 const RegisterView = () => import('@/views/auth/RegisterView.vue');
+
 const SubjectsView = () => import('@/views/SubjectsView.vue');
+const SubjectView = () => import('@/views/SubjectView.vue');
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -30,7 +32,13 @@ const router = createRouter({
       component: SubjectsView,
       meta: {
         inNavbar: true,
-      }
+      },
+    },
+    {
+      path: '/subjects/:id',
+      name: 'subject',
+      component: SubjectView,
+      props: true,
     },
   ],
 });

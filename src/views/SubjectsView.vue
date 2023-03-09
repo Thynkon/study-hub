@@ -1,93 +1,62 @@
 <script setup lang="ts">
-import SuccessAlert from '@/components/SuccessAlert.vue';
-import Edit from '@/components/subjects/Edit.vue';
-import New from '@/components/subjects/New.vue';
 import { db } from '@/firebase';
-import { useSubjectsStore } from '@/stores/subjects';
-import {
-  Disclosure,
-  DisclosureButton,
-  DisclosurePanel,
-} from '@headlessui/vue';
-import { ChevronUpIcon, PencilIcon, TrashIcon } from '@heroicons/vue/20/solid';
 import { collection } from 'firebase/firestore';
 import { ref } from 'vue';
 import { useCollection } from 'vuefire';
 
-type Author = {
-  name: string;
-  email: string;
-}
+import type Subject from '@/models/subject';
 
-type Subject = {
-  name: string;
-  description: string;
-  author: Author;
-}
+import SuccessAlert from '@/components/SuccessAlert.vue';
 
-function closeCreateForm() {
-  isCreateForm.value = false;
-}
-
-function closeEditForm() {
-  isEditForm.value = false;
-}
-
-const subjectsStore = useSubjectsStore();
-
-const handleCreate = () => {
-  isCreateForm.value = true;
-};
-
-const handleEdit = (item) => {
-  console.log("Setting subject to ==> ");
-  console.log(item);
-  subject.value = item;
-  isEditForm.value = true;
-  //openModal();
-};
-
-const handleDelete = (subject) => {
-  // Delete subject from subjects collection
-  subjectsStore.deleteSubject(subject);
-};
+import SubjectCard from '@/components/SubjectCard.vue';
+import New from '@/components/subjects/New.vue';
+import router from '@/router';
 
 const subjects = useCollection(collection(db, 'subjects'));
-const subject = ref({} as Subject);
 
-const isCreateForm = ref(false);
-const isEditForm = ref(false);
+const isCreationModalOpen = ref(false);
+
+const handleCreate = () => {
+  isCreationModalOpen.value = true;
+};
+
+function closeCreateForm() {
+  isCreationModalOpen.value = false;
+}
 </script>
 
 <template>
   <div class="w-full pt-16">
     <div class="mx-auto w-full rounded-2xl bg-white space-y-4">
-
       <SuccessAlert position="top right" group="subjects" />
 
-      <div class="flex justify-end">
-        <button class="primary-button" @click.prevent="handleCreate">
-          Add Subject
-        </button>
-
-        <New :isOpen="isCreateForm" :closeModal="closeCreateForm" />
-      </div>
-
-      <Disclosure v-slot="{ open }" v-for="subject in subjects" :key="subject.id">
-        <DisclosureButton
-          class="flex w-full justify-between rounded-lg bg-gray-100 px-4 py-2 text-left text-sm font-medium text-black-900 hover:bg-gray-200 focus:outline-none focus-visible:ring focus-visible:ring-black-500 focus-visible:ring-opacity-75">
-          <span>{{ subject.name }}</span>
-          <ChevronUpIcon :class="open ? 'rotate-180 transform' : ''" class="h-5 w-5 text-gray-500" />
-        </DisclosureButton>
-        <DisclosurePanel class="px-4 pt-4 pb-2 text-sm text-gray-500 flex flex-col space-y-2">
-          <textarea class="border border-gray-200 p-2 rounded-lg" readonly>{{ subject.description }}</textarea>
-          <div class="flex justify-end space-x-2">
-            <PencilIcon class="h-5 w-5 cursor-pointer" @click="handleEdit(subject)" />
-            <TrashIcon class="h-5 w-5 cursor-pointer" @click="handleDelete(subject)" />
+      <div class="py-8 space-y-4">
+        <!-- Action bar -->
+        <div class="flex justify-end items-center">
+          <div class="grow">
+            <h2 class="text-2xl font-bold text-gray-900">Subjects</h2>
           </div>
-        </DisclosurePanel>
-      </Disclosure>
-      <Edit :isOpen="isEditForm" :closeModal="closeEditForm" :subject="subject" :key="subject.name" />
+
+          <button class="primary-button" @click.prevent="handleCreate">
+            New
+          </button>
+
+          <New :isOpen="isCreationModalOpen" :closeModal="closeCreateForm" />
+        </div>
+
+        <!-- Subjects list -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+          <SubjectCard
+            v-for="subject in subjects"
+            :key="subject.id"
+            :subject="(subject as Subject)"
+            @click="
+              router.push({ name: 'subject', params: { id: subject.id } })
+            "
+          >
+          </SubjectCard>
+        </div>
+      </div>
     </div>
   </div>
 </template>
