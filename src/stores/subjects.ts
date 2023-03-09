@@ -1,6 +1,4 @@
-import { ref } from 'vue';
 import { defineStore } from 'pinia';
-import { useFirebaseAuth } from 'vuefire';
 import { db } from '@/firebase';
 import {
   addDoc,
@@ -57,6 +55,13 @@ export const useSubjectsStore = defineStore('subjects', () => {
     });
   }
 
+  async function getSubject(id: string) {
+    // Get subject from subjects collection
+    const subject = await getDoc(doc(db, 'subjects', id));
+
+    return subject;
+  }
+
   async function updateSubject(subject, data) {
     // Update subject in subjects collection
     updateDoc(doc(db, 'subjects', subject.id), {
@@ -81,5 +86,5 @@ export const useSubjectsStore = defineStore('subjects', () => {
     });
   }
 
-  return { createSubject, updateSubject, deleteSubject };
+  return { getSubject, createSubject, updateSubject, deleteSubject };
 });

@@ -8,13 +8,14 @@ import type Subject from '@/models/subject';
 import SuccessAlert from '@/components/SuccessAlert.vue';
 import type Exercise from '@/models/exercise';
 import ExerciseCard from '@/components/exercises/Card.vue';
+import router from '@/router';
 
 const props = defineProps<{
   id: string;
 }>();
 
-const handleCreate = () => {
-  console.log('Create');
+const handleCreate = (subject: Subject) => {
+  router.push({ name: 'exercises.create', params: { id: subject.id } });
 };
 
 const subject = useDocument(doc(db, 'subjects', props.id));
@@ -24,6 +25,7 @@ const subject = useDocument(doc(db, 'subjects', props.id));
   <div class="w-full pt-16">
     <div class="mx-auto w-full rounded-2xl bg-white space-y-4">
       <SuccessAlert position="top right" group="subjects" />
+      <SuccessAlert position="top right" group="exercises" />
 
       <div>
         <h2 class="text-2xl font-bold text-gray-900">{{ subject?.name }}</h2>
@@ -38,7 +40,7 @@ const subject = useDocument(doc(db, 'subjects', props.id));
             <h2 class="text-2xl font-bold text-gray-900">Exercises</h2>
           </div>
 
-          <button class="primary-button" @click.prevent="handleCreate">
+          <button class="primary-button" @click.prevent="handleCreate(subject)">
             New
           </button>
         </div>

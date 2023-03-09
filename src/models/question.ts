@@ -1,4 +1,4 @@
-import type Answer from "./answer";
+import type Answer from './answer';
 
 export default class Question {
   private _id: string;
@@ -18,6 +18,10 @@ export default class Question {
 
   public get answers(): Answer[] {
     return this._answers;
+  }
+
+  public set answers(answers: Answer[]) {
+    this._answers = answers;
   }
 
   public get correctAnswer(): Answer | undefined {
