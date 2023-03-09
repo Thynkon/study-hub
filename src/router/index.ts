@@ -1,10 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import HomeView from '../views/HomeView.vue';
 import { getCurrentUser } from 'vuefire';
 
-const LoginView = () => import('@/views/LoginView.vue');
-const RegisterView = () => import('@/views/RegisterView.vue');
+import HomeView from '@/views/HomeView.vue';
+const LoginView = () => import('@/views/auth/LoginView.vue');
+const RegisterView = () => import('@/views/auth/RegisterView.vue');
+
 const SubjectsView = () => import('@/views/SubjectsView.vue');
+const SubjectView = () => import('@/views/SubjectView.vue');
+const ExercisesCreateView = () => import('@/views/ExercisesCreateView.vue');
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,25 +16,16 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView,
-      meta: {
-        inNavbar: false,
-      }
     },
     {
       path: '/login',
       name: 'login',
       component: LoginView,
-      meta: {
-        inNavbar: false,
-      }
     },
     {
       path: '/register',
       name: 'register',
       component: RegisterView,
-      meta: {
-        inNavbar: false,
-      }
     },
     {
       path: '/subjects',
@@ -39,7 +33,19 @@ const router = createRouter({
       component: SubjectsView,
       meta: {
         inNavbar: true,
-      }
+      },
+    },
+    {
+      path: '/subjects/:id',
+      name: 'subject',
+      component: SubjectView,
+      props: true,
+    },
+    {
+      path: '/subjects/:id/create-exercises',
+      name: 'exercises.create',
+      component: ExercisesCreateView,
+      props: true,
     },
   ],
 });

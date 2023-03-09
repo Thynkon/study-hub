@@ -29,4 +29,4 @@ Pour valider les compétences d'un sujet, les utilisateurs devront passer un exa
 ## Contact
 
 - [MARECHAL Armand](https://github.com/Penfu)
-- [Ferreria Mario](https://github.com/Thynkon)
+- [Ferreira Mário](https://github.com/Thynkon)

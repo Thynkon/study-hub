@@ -1,13 +1,17 @@
-import { ref } from 'vue'
-import { defineStore } from 'pinia'
-import { useFirebaseAuth } from 'vuefire';
+import { defineStore } from 'pinia';
 import { db } from '@/firebase';
-import { addDoc, collection, deleteDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
-import { useNotification } from "@kyvg/vue3-notification";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  updateDoc,
+} from 'firebase/firestore';
+import { useNotification } from '@kyvg/vue3-notification';
 import { useCurrentUser } from 'vuefire';
 
-const { notify } = useNotification()
-const auth = useFirebaseAuth();
+const { notify } = useNotification();
 const user = useCurrentUser();
 
 export type Message = {
@@ -17,6 +21,17 @@ export type Message = {
 
 export const useSubjectsStore = defineStore('subjects', () => {
   async function createSubject(data) {
+    if (!user.value) {
+      console.log('You must be logged in to create a subject');
+
+      notify({
+        type: 'error',
+        group: 'subjects',
+        title: 'You must be logged in to create a subject',
+      });
+      return;
+    }
+
     const documentName = user.value?.uid;
 
     // Get author reference
@@ -34,10 +49,17 @@ export const useSubjectsStore = defineStore('subjects', () => {
     });
 
     notify({
-      type: "success",
-      group: "subjects",
-      title: "Subject created successfully",
+      type: 'success',
+      group: 'subjects',
+      title: 'Subject created successfully',
     });
+  }
+
+  async function getSubject(id: string) {
+    // Get subject from subjects collection
+    const subject = await getDoc(doc(db, 'subjects', id));
+
+    return subject;
   }
 
   async function updateSubject(subject, data) {
@@ -48,9 +70,9 @@ export const useSubjectsStore = defineStore('subjects', () => {
     });
 
     notify({
-      type: "success",
-      group: "subjects",
-      title: "Subject updated successfully",
+      type: 'success',
+      group: 'subjects',
+      title: 'Subject updated successfully',
     });
   }
 
@@ -58,11 +80,11 @@ export const useSubjectsStore = defineStore('subjects', () => {
     // Delete subject
     deleteDoc(doc(db, 'subjects', subject.id));
     notify({
-      type: "success",
-      group: "subjects",
-      title: "Subject deleted successfully",
+      type: 'success',
+      group: 'subjects',
+      title: 'Subject deleted successfully',
     });
   }
 
-  return { createSubject, updateSubject, deleteSubject };
+  return { getSubject, createSubject, updateSubject, deleteSubject };
 });
