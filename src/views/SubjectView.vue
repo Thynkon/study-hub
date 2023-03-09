@@ -25,30 +25,33 @@ const subject = useDocument(doc(db, 'subjects', props.id));
     <div class="mx-auto w-full rounded-2xl bg-white space-y-4">
       <SuccessAlert position="top right" group="subjects" />
 
-      <div class="flex justify-end items-center">
-        <div class="grow">
-          <h2 class="text-2xl font-bold text-gray-900">Exercises</h2>
-        </div>
-
-        <button class="primary-button" @click.prevent="handleCreate">
-          New
-        </button>
-      </div>
-
       <div>
         <h2 class="text-2xl font-bold text-gray-900">{{ subject?.name }}</h2>
         <p>{{ subject?.description }}</p>
       </div>
 
-      <!-- Subjects list -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
-        <ExerciseCard
-          v-for="exercise in subject?.exercises"
-          :key="exercise.id"
-          Subjct
-          :exercise="(exercise as Exercise)"
-        >
-        </ExerciseCard>
+      <!-- Exercises -->
+      <div>
+        <!-- Actions -->
+        <div class="flex justify-end items-center">
+          <div class="grow">
+            <h2 class="text-2xl font-bold text-gray-900">Exercises</h2>
+          </div>
+
+          <button class="primary-button" @click.prevent="handleCreate">
+            New
+          </button>
+        </div>
+
+        <!-- List -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+          <ExerciseCard
+            v-for="exercise in subject?.exercises"
+            :key="exercise.id"
+            :exercise="(exercise as Exercise)"
+          >
+          </ExerciseCard>
+        </div>
       </div>
     </div>
   </div>
