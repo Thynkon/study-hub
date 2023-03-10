@@ -1,21 +1,16 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue';
 import useVuelidate from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
 import Question from '@/models/question';
 import Answer from '@/models/answer';
 import Exercise from '@/models/exercise';
-import { useCurrentUser } from 'vuefire';
 import User from '@/models/user';
-import type Subject from '@/models/subject';
 import ExercisesProvider from '@/providers/exercises';
 import ErrorAlert from '@/components/ErrorAlert.vue';
 import router from '@/router';
 import { useSubjectsStore } from '@/stores/subjects';
 import { useRoute } from 'vue-router';
-import { TrashIcon } from '@heroicons/vue/20/solid';
-
-const user = useCurrentUser();
+import { PlusIcon, TrashIcon } from '@heroicons/vue/20/solid';
 
 const formData = reactive({
   title: '',
@@ -80,170 +75,150 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="w-full pt-16">
-    <h2 class="text-xl font-bold">Add a new exercise</h2>
-    <div class="mt-2 shadow-md p-4 rounded-sm border-1 border-gray-200">
-      <form @submit.prevent="onSubmit">
-        <div class="space-y-6 bg-white py-5">
-          <div>
-            <ErrorAlert :errors="v$.title.$errors" />
-            <div>
-              <label for="title" class="block text-sm font-medium text-gray-700"
-                >Name</label
-              >
-              <div class="mt-1 flex rounded-md shadow-sm">
+  <div class="py-16 space-y-8">
+    <h2 class="text-4xl font-bold">New exercise</h2>
+
+    <form @submit.prevent="onSubmit" class="space-y-12">
+      <!-- Exercise Section -->
+      <div class="p-8 space-y-8 bg-white rounded-lg shadow-lg shadow-gray-300">
+        <h3 class="text-2xl font-bold">Exercise</h3>
+
+        <!-- Name -->
+        <div class="space-y-4">
+          <ErrorAlert :errors="v$.title.$errors" />
+
+          <label for="title" class="text-lg font-medium text-gray-700">
+            Name
+          </label>
+          <input type="text" id="title" class="" v-model="exercise.title" />
+        </div>
+
+        <!-- Theory -->
+        <div class="space-y-4">
+          <ErrorAlert :errors="v$.theory.$errors" />
+
+          <label for="description" class="text-lg font-medium text-gray-700">
+            Theory
+          </label>
+          <textarea id="description" rows="3" v-model="exercise.theory" />
+        </div>
+      </div>
+
+      <!-- Question Section -->
+      <div class="space-y-8">
+        <!-- Action bar -->
+        <div class="flex justify-end items-center">
+          <div class="grow">
+            <h3 class="text-2xl font-bold">
+              Questions ({{ questions.length }})
+            </h3>
+          </div>
+
+          <button @click.prevent="handleAddQuestion" class="btn-primary">
+            Add question
+          </button>
+        </div>
+
+        <!-- Question List -->
+        <div
+          v-for="(question, questionIndex) in questions"
+          :key="question.id"
+          class="p-8 flex flex-col space-y-8 bg-white rounded-lg shadow-lg shadow-gray-300"
+        >
+          <!-- Question -->
+          <div class="flex gap-4">
+            <div class="grow">
+              <h3 class="text-2xl font-bold">
+                Question {{ questionIndex + 1 }}
+              </h3>
+            </div>
+
+            <TrashIcon
+              @click.prevent="handleRemoveQuestion(question as Question)"
+              class="btn-icon"
+            />
+          </div>
+
+          <div class="space-y-4">
+            <label
+              :for="`question-${questionIndex}-caption`"
+              class="text-lg font-medium text-gray-700"
+            >
+              Caption
+            </label>
+            <input
+              type="text"
+              v-model="question.caption"
+              :id="`question-${questionIndex}-caption`"
+            />
+          </div>
+
+          <!-- Answers -->
+          <div class="space-y-8">
+            <!-- Action bar -->
+            <div class="flex justify-end items-center">
+              <div class="grow">
+                <h4 class="text-2xl font-bold">
+                  Answers ({{ question.answers.length }})
+                </h4>
+              </div>
+
+              <PlusIcon
+                @click.prevent="handleAddAnswer(question as Question)"
+                class="btn-icon"
+              />
+            </div>
+
+            <!-- Answer List -->
+            <div
+              v-for="(answer, answerIndex) in question.answers"
+              :key="answer.id"
+            >
+              <!-- Answer -->
+              <div class="space-y-4">
+                <div class="flex items-center space-x-2">
+                  <label
+                    :for="`question-${questionIndex}-answer-${answerIndex}-value`"
+                    class="self-end grow text-lg font-medium text-gray-700"
+                  >
+                    Answer {{ answerIndex + 1 }}
+                  </label>
+                  <button
+                    type="button"
+                    @click="answer.isCorrect = !answer.isCorrect"
+                    class="py-2 w-20 font-semibold rounded-md"
+                    :class="{
+                      'text-green-400 hover:text-green-500 bg-green-100 hover:bg-green-200':
+                        answer.isCorrect,
+                      'text-red-400 hover:text-red-500 bg-red-100 hover:bg-red-200':
+                        !answer.isCorrect,
+                    }"
+                  >
+                    {{ answer.isCorrect ? 'Valid' : 'Invalid' }}
+                  </button>
+                  <TrashIcon
+                    class="btn-icon"
+                    @click.prevent="
+                      handleRemoveAnswer(question as Question, answer as Answer)
+                    "
+                  />
+                </div>
                 <input
                   type="text"
-                  id="title"
-                  class="w-full rounded-md ring-2 ring-gray-100 focus:ring-gray-200 sm:text-sm p-2"
-                  v-model="exercise.title"
+                  v-model="answer.value"
+                  :id="`question-${questionIndex}-answer-${answerIndex}-value`"
                 />
               </div>
             </div>
           </div>
-
-          <div>
-            <div>
-              <label
-                for="description"
-                class="block text-sm font-medium text-gray-700"
-                >Theory</label
-              >
-              <div class="mt-1">
-                <textarea
-                  id="description"
-                  rows="3"
-                  v-model="exercise.theory"
-                  class="mt-1 w-full rounded-md ring-2 ring-gray-100 focus:ring-gray-200 shadow-sm focus:border-gray-500 sm:text-sm p-2"
-                ></textarea>
-              </div>
-            </div>
-            <div class="mt-4">
-              <ErrorAlert :errors="v$.theory.$errors" />
-            </div>
-          </div>
-          <div class="flex flex-col space-y-4 border-2 rounded-md">
-            <div class="flex justify-end items-center pl-2">
-              <div class="grow">
-                <label
-                  for="question-{{ question.id }}"
-                  class="block text-sm font-medium text-gray-700"
-                  >Questions</label
-                >
-              </div>
-
-              <button class="primary-button" @click.prevent="handleAddQuestion">
-                New
-              </button>
-            </div>
-            <div
-              v-for="(question, questionIndex) in questions"
-              class="flex flex-col space-y-4 pl-4"
-            >
-              <label
-                :for="'question-' + questionIndex + '-caption'"
-                class="block text-sm font-medium text-gray-700"
-                >Caption</label
-              >
-              <input
-                type="text"
-                class="w-full rounded-md ring-2 ring-gray-100 focus:ring-gray-200 sm:text-sm p-2"
-                :id="'question-' + questionIndex + '-caption'"
-                v-model="question.caption"
-              />
-              <div class="flex flex-col space-x-2 space-y-8 w-full">
-                <div class="flex justify-end items-center">
-                  <div class="grow">
-                    <label class="block text-sm font-medium text-gray-700"
-                      >Answers</label
-                    >
-                  </div>
-
-                  <button
-                    class="primary-button"
-                    @click.prevent="handleAddAnswer(question as Question)"
-                  >
-                    New
-                  </button>
-                </div>
-
-                <div
-                  class="flex space-y-4 space-x-4"
-                  v-for="(answer, answerIndex) in question.answers"
-                >
-                  <div class="flex-grow">
-                    <div>
-                      <label
-                        :for="
-                          'question-' +
-                          questionIndex +
-                          '-answer-' +
-                          answerIndex +
-                          '-value'
-                        "
-                        :id="'question-' + question.id + '-answer-'"
-                        class="block text-sm font-medium text-gray-700"
-                        >Value</label
-                      >
-                      <input
-                        type="text"
-                        class="w-full rounded-md ring-2 ring-gray-100 focus:ring-gray-200 sm:text-sm p-2"
-                        :id="
-                          'question-' +
-                          questionIndex +
-                          '-answer-' +
-                          answerIndex +
-                          '-value'
-                        "
-                        v-model="answer.value"
-                      />
-                    </div>
-                    <div class="flex space-x-4">
-                      <label
-                        :for="
-                          'question-' +
-                          questionIndex +
-                          '-answer-' +
-                          answerIndex +
-                          '-isCorrect'
-                        "
-                        class="block text-sm font-medium text-gray-700"
-                        >Is correct?</label
-                      >
-                      <input
-                        type="checkbox"
-                        :id="
-                          'question-' +
-                          questionIndex +
-                          '-answer-' +
-                          answerIndex +
-                          '-isCorrect'
-                        "
-                        v-model="answer.isCorrect"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <TrashIcon
-                      class="h-6 w-6 text-gray-400 hover:text-gray-500"
-                      @click.prevent="handleRemoveAnswer(question, answer)"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
-        <div class="text-right">
-          <button
-            type="submit"
-            class="inline-flex justify-center rounded-md border border-transparent bg-gray-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
-            @click.prevent="onSubmit"
-          >
-            Create
-          </button>
-        </div>
-      </form>
-    </div>
+      </div>
+
+      <div class="flex justify-end">
+        <button type="submit" @click.prevent="onSubmit" class="btn-primary">
+          Create exercise
+        </button>
+      </div>
+    </form>
   </div>
 </template>

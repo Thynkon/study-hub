@@ -7,7 +7,6 @@ import Dropdown from '@/components/Dropdown.vue';
 import ProfileIcon from '@/components/icons/ProfileIcon.vue';
 import HamburgerIcon from '@/components/icons/HamburgerIcon.vue';
 
-const Route = (name: string, path: string) => ({ name, path });
 const routes = router.getRoutes().filter((route) => route.meta?.inNavbar);
 
 const user = useCurrentUser();
@@ -20,10 +19,12 @@ const handleLogout = async () => {
 </script>
 
 <template>
-  <div class="mx-8 xl:mx-auto max-w-7xl">
+  <div class="min-h-screen bg-gray-50">
     <header>
-      <nav class="my-4 bg-white border-gray-200 rounded">
-        <div class="flex flex-wrap items-center justify-between space-x-4">
+      <nav class="py-4 bg-white border-gray-200 rounded shadow-lg">
+        <div
+          class="mx-8 xl:mx-auto max-w-7xl flex flex-wrap items-center justify-between space-x-4"
+        >
           <RouterLink to="/" class="flex items-center">
             <span class="text-xl font-semibold whitespace-nowrap">
               Study Hub
@@ -130,6 +131,6 @@ const handleLogout = async () => {
       </nav>
     </header>
 
-    <RouterView />
+    <RouterView class="mx-8 xl:mx-auto max-w-7xl" />
   </div>
 </template>

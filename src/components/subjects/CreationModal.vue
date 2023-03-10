@@ -94,54 +94,40 @@ const v$ = useVuelidate(rules, formData);
                   <div class="space-y-2">
                     <ErrorAlert :errors="v$.name.$errors" />
 
-                    <label for="name" class="block font-medium text-gray-700">
+                    <label for="name" class="font-medium text-gray-700">
                       Name
                     </label>
-                    <input
-                      type="text"
-                      id="name"
-                      class="p-2 w-full rounded-md ring-2 ring-gray-100 focus:ring-gray-200"
-                      v-model="formData.name"
-                    />
+                    <input type="text" id="name" v-model="formData.name" />
                   </div>
 
                   <!-- Slug -->
                   <div class="space-y-2">
                     <ErrorAlert :errors="v$.slug.$errors" />
 
-                    <label for="slug" class="block font-medium text-gray-700"
+                    <label for="slug" class="font-medium text-gray-700"
                       >Slug</label
                     >
-                    <input
-                      type="text"
-                      id="slug"
-                      class="p-2 w-full rounded-md ring-2 ring-gray-100 focus:ring-gray-200"
-                      v-model="formData.slug"
-                    />
+                    <input type="text" id="slug" v-model="formData.slug" />
                   </div>
 
                   <!-- Description -->
                   <div class="space-y-2">
                     <ErrorAlert :errors="v$.description.$errors" />
 
-                    <label
-                      for="description"
-                      class="block font-medium text-gray-700"
-                    >
+                    <label for="description" class="font-medium text-gray-700">
                       Description
                     </label>
                     <textarea
                       id="description"
                       rows="3"
                       v-model="formData.description"
-                      class="p-2 w-full rounded-md ring-2 ring-gray-100 focus:ring-gray-200 shadow focus:border-gray-500"
                     />
                   </div>
                 </div>
 
                 <!-- Buttons -->
                 <div class="flex justify-end">
-                  <button type="submit" class="primary-button">Save</button>
+                  <button type="submit" class="btn-primary">Save</button>
                 </div>
               </form>
             </DialogPanel>

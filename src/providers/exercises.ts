@@ -1,5 +1,6 @@
 import { db } from '@/firebase';
 import type Exercise from '@/models/exercise';
+import type Question from '@/models/question';
 import router from '@/router';
 import { notify } from '@kyvg/vue3-notification';
 import {
