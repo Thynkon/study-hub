@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import type Subject from '@/models/subject';
 
-import SuccessAlert from '@/components/SuccessAlert.vue';
-
 defineProps<{
   subject: Subject;
 }>();
