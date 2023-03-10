@@ -10,6 +10,8 @@ import {
   doc,
   DocumentReference,
   getDoc,
+  updateDoc,
+  arrayUnion
 } from 'firebase/firestore';
 import { useCollection, useCurrentUser } from 'vuefire';
 
@@ -47,16 +49,21 @@ export default class ExercisesProvider {
     });
 
     await Promise.all(questionsRef).then(async (questionRefs) => {
-      console.log('Got values: ==> ');
-      console.log(questionRefs);
       // Create exercise in exercises collection
-      await addDoc(collection(db, 'exercises'), {
+      const exerciseRef = await addDoc(collection(db, 'exercises'), {
         title: exercise.title,
         theory: exercise.theory,
         author: await this._author(),
         subjects: exercise.subjects,
         questions: questionRefs,
-        // TODO: subjects and questions
+      });
+
+      // Append exercise to subject's exercises
+      await exercise.subjects.forEach(async (subject) => {
+        // Append exercise to subject's exercises
+        await updateDoc(doc(db, 'subjects', subject.id), {
+          exercises: arrayUnion(exerciseRef),
+        });
       });
     });
 

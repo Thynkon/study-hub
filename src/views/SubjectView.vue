@@ -7,7 +7,7 @@ import type Subject from '@/models/subject';
 
 import SuccessAlert from '@/components/SuccessAlert.vue';
 import type Exercise from '@/models/exercise';
-import ExerciseCard from '@/components/exercises/Card.vue';
+import ExerciseCard from '@/components/exercises/ExerciseCard.vue';
 import router from '@/router';
 
 const props = defineProps<{
@@ -32,7 +32,7 @@ const subject = useDocument(doc(db, 'subjects', props.id));
     </div>
 
     <!-- Exercises -->
-    <div>
+    <div class="flex flex-col space-y-4">
       <!-- Actions -->
       <div class="flex justify-end items-center">
         <div class="grow">
