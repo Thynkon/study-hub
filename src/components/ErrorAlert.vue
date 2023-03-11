@@ -28,8 +28,17 @@ defineProps<{
       ></path>
     </svg>
     <span class="sr-only">Info</span>
+    <!-- when performing nested validation, errors message is an array containing other messages -->
     <div class="ml-3 text-sm font-medium">
-      {{ error.$message }}
+      <span
+        v-if="Array.isArray(error.$message)"
+        v-for="message in error.$message"
+      >
+        {{ message[0] }}
+      </span>
+      <span v-else>
+        {{ error.$message }}
+      </span>
     </div>
   </div>
 </template>

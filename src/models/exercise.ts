@@ -6,8 +6,8 @@ import type Subject from './subject';
 export default class Exercise {
   private _id: string;
   private _author: User;
-  private _questions: Question[] | DocumentReference<DocumentData>[];
-  private _subjects: Subject[] | DocumentReference<DocumentData>[];
+  private _questions: Question[];
+  private _subjects: Subject[];
 
   public title: string;
   public theory: string;
@@ -30,15 +30,15 @@ export default class Exercise {
     return this._author;
   }
 
-  public get questions(): Question[] | DocumentReference<DocumentData>[] {
+  public get questions(): Question[] {
     return this._questions;
   }
 
-  public get subjects(): Subject[] | DocumentReference<DocumentData>[] {
+  public get subjects(): Subject[] {
     return this._subjects;
   }
 
-  public set subjects(subjects: Subject[] | DocumentReference<DocumentData>[]) {
+  public set subjects(subjects: Subject[]) {
     this._subjects = subjects;
   }
 }

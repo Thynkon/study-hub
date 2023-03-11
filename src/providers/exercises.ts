@@ -1,14 +1,11 @@
 import { db } from '@/firebase';
 import type Exercise from '@/models/exercise';
-import type Question from '@/models/question';
-import router from '@/router';
 import { notify } from '@kyvg/vue3-notification';
 import {
   addDoc,
   collection,
   deleteDoc,
   doc,
-  DocumentReference,
   getDoc,
   updateDoc,
   arrayUnion
@@ -59,7 +56,7 @@ export default class ExercisesProvider {
       });
 
       // Append exercise to subject's exercises
-      await exercise.subjects.forEach(async (subject) => {
+      exercise.subjects.forEach(async (subject) => {
         // Append exercise to subject's exercises
         await updateDoc(doc(db, 'subjects', subject.id), {
           exercises: arrayUnion(exerciseRef),

@@ -4,22 +4,30 @@ import useVuelidate from '@vuelidate/core';
 import Question from '@/models/question';
 import Answer from '@/models/answer';
 import Exercise from '@/models/exercise';
-import User from '@/models/user';
+import type User from '@/models/user';
 import ExercisesProvider from '@/providers/exercises';
 import ErrorAlert from '@/components/ErrorAlert.vue';
 import router from '@/router';
 import { useSubjectsStore } from '@/stores/subjects';
 import { useRoute } from 'vue-router';
-import { PlusIcon, TrashIcon } from '@heroicons/vue/20/solid';
-
-const formData = reactive({
-  title: '',
-  theory: '',
-});
+import { PlusIcon } from '@heroicons/vue/20/solid';
+import { helpers, required } from '@vuelidate/validators';
+import DeleteButton from '@/components/buttons/DeleteButton.vue';
 
 const rules = {
-  title: {},
+  title: { required },
   theory: {},
+  questions: {
+    $each: helpers.forEach({
+      caption: { required },
+      answers: {
+        $each: helpers.forEach({
+          value: { required },
+          is_correct: { required },
+        }),
+      },
+    }),
+  },
 };
 
 const route = useRoute();
@@ -27,7 +35,7 @@ const route = useRoute();
 const subjectId = route.params.id as string;
 const subjectsStore = useSubjectsStore();
 
-const u = new User('', '', '');
+const u = {} as User;
 
 const questions = ref<Question[]>([
   new Question('', '', [new Answer('', '', false)]),
@@ -37,8 +45,14 @@ const exercise = ref<Exercise>(
   new Exercise('', u, '', '', questions.value as Question[], [])
 );
 
+const formData = reactive(exercise);
+
+/*
+  Handlers
+*/
+
 const handleAddAnswer = (question: Question) => {
-  question.answers.push(new Answer('', '', false));
+  question.answers.push({} as Answer);
 };
 
 const handleRemoveAnswer = (question: Question, answer: Answer) => {
@@ -56,13 +70,12 @@ const handleRemoveQuestion = (question: Question) => {
 const onSubmit = async () => {
   const result = await v$.value.$validate();
   if (!result) {
-    //console.log('Validation failed');
-    //return;
+    console.log('Validation failed');
+    return;
   }
 
-  ExercisesProvider.create(exercise.value as Exercise);
-  // Redirect to /subjects:id
-  router.push(`/subjects/${subjectId}`);
+  await ExercisesProvider.create(exercise.value as Exercise);
+  // Redirect to /subjects/:id
   router.push({ name: 'subject', params: { id: subjectId } });
 };
 
@@ -133,8 +146,10 @@ onMounted(async () => {
               </h3>
             </div>
 
-            <TrashIcon
-              @click.prevent="handleRemoveQuestion(question as Question)"
+            <ErrorAlert :errors="v$.questions.$errors" />
+
+            <DeleteButton
+              @onClick="handleRemoveQuestion(question as Question)"
               class="btn-icon"
             />
           </div>
@@ -196,9 +211,9 @@ onMounted(async () => {
                   >
                     {{ answer.isCorrect ? 'Valid' : 'Invalid' }}
                   </button>
-                  <TrashIcon
+                  <DeleteButton
                     class="btn-icon"
-                    @click.prevent="
+                    @onClick="
                       handleRemoveAnswer(question as Question, answer as Answer)
                     "
                   />
