@@ -1,5 +1,6 @@
 import { db } from '@/firebase';
 import type Exercise from '@/models/exercise';
+import router from '@/router';
 import { notify } from '@kyvg/vue3-notification';
 import {
   addDoc,
@@ -8,8 +9,10 @@ import {
   doc,
   getDoc,
   updateDoc,
-  arrayUnion
+  arrayUnion,
+  arrayRemove
 } from 'firebase/firestore';
+import { useRoute } from 'vue-router';
 import { useCollection, useCurrentUser } from 'vuefire';
 
 export default class ExercisesProvider {
@@ -71,12 +74,25 @@ export default class ExercisesProvider {
     });
   }
 
-  public static delete(exercise: any) {
+  public static async delete(exercise: Exercise) {
+    const subjectId = router.currentRoute.value.params.id as string;
+
+    // First, delete exercise's questions
+    exercise.questions.forEach(async (question: any) => {
+      await deleteDoc(doc(db, 'questions', question.id));
+    });
+
     // Delete subject
-    deleteDoc(doc(db, 'exercises', exercise.id));
+    await deleteDoc(doc(db, 'exercises', exercise.id));
+
+    // Finally, remove exercise from subject's exercises
+    await updateDoc(doc(db, 'subjects', subjectId), {
+      exercises: arrayRemove(doc(db, 'exercises', exercise.id)),
+    });
+
     notify({
       type: 'success',
-      group: 'subjects',
+      group: 'exercises',
       title: 'Exercise deleted successfully',
     });
   }

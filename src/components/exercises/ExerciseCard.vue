@@ -1,13 +1,19 @@
 <script setup lang="ts">
 import type Exercise from '@/models/exercise';
 import DeleteButton from '../buttons/DeleteButton.vue';
+import ExercisesProvider from '@/providers/exercises';
+import router from '@/router';
+import { useRoute } from 'vue-router';
 
 defineProps<{
   exercise: Exercise;
 }>();
 
-const handleDelete = (exercise) => {
-  console.log('Delete');
+const route = useRoute();
+
+const handleDelete = async (exercise) => {
+  await ExercisesProvider.delete(exercise);
+  router.push(route.path);
 };
 </script>
 
