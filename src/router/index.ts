@@ -7,7 +7,9 @@ const RegisterView = () => import('@/views/auth/RegisterView.vue');
 
 const SubjectsView = () => import('@/views/SubjectsView.vue');
 const SubjectView = () => import('@/views/SubjectView.vue');
+
 const ExercisesCreateView = () => import('@/views/ExercisesCreateView.vue');
+const ExerciseView = () => import('@/views/ExerciseView.vue');
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -45,6 +47,12 @@ const router = createRouter({
       path: '/subjects/:id/create-exercises',
       name: 'exercises.create',
       component: ExercisesCreateView,
+      props: true,
+    },
+    {
+      path: '/exercise/:id',
+      name: 'exercise',
+      component: ExerciseView,
       props: true,
     },
   ],

@@ -18,14 +18,14 @@ const isCreationModalOpen = ref(false);
 </script>
 
 <template>
-  <div class="space-y-4">
+  <div>
     <SuccessAlert position="top right" group="subjects" />
 
     <div class="py-8 space-y-4">
       <!-- Action bar -->
       <div class="flex justify-end items-center">
         <div class="grow">
-          <h2 class="text-2xl font-bold text-gray-900">Subjects</h2>
+          <h2 class="text-4xl font-bold text-gray-900">Subjects</h2>
         </div>
 
         <button @click="isCreationModalOpen = true" class="btn-primary">
@@ -39,7 +39,7 @@ const isCreationModalOpen = ref(false);
       </div>
 
       <!-- Subjects list -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+      <div class="pt-16 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
         <SubjectCard
           v-for="subject in subjects"
           :key="subject.id"
