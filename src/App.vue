@@ -21,9 +21,11 @@ const handleLogout = async () => {
 <template>
   <div class="min-h-screen bg-gray-50">
     <header>
-      <nav class="py-4 bg-white border-gray-200 rounded shadow-lg">
+      <nav
+        class="h-[var(--h-navbar)] bg-white border-gray-200 rounded shadow-lg"
+      >
         <div
-          class="mx-8 xl:mx-auto max-w-7xl flex flex-wrap items-center justify-between space-x-4"
+          class="mx-8 xl:mx-auto max-w-7xl h-full flex flex-wrap items-center justify-between space-x-4"
         >
           <RouterLink to="/" class="flex items-center">
             <span class="text-xl font-semibold whitespace-nowrap">
@@ -39,8 +41,8 @@ const handleLogout = async () => {
                 <li v-for="route in routes" :key="route.name">
                   <RouterLink
                     :to="route.path"
-                    class="py-2 px-4 text-gray-700 hover:border-b-4 border-blue-500"
-                    active-class="bg-blue-100 text-blue-500 rounded"
+                    class="py-2 px-4 text-lg text-gray-700 capitalize"
+                    active-class="text-blue-500"
                   >
                     {{ route.name }}
                   </RouterLink>
@@ -72,7 +74,7 @@ const handleLogout = async () => {
               <RouterLink
                 v-else
                 to="/login"
-                class="py-2 px-4 text-white bg-blue-600 hover:bg-blue-700 rounded"
+                class="py-1 px-4 font-medium text-lg text-white bg-blue-500 hover:bg-blue-600 rounded-md"
               >
                 Login
               </RouterLink>
@@ -87,16 +89,16 @@ const handleLogout = async () => {
               </template>
               <template #content>
                 <div
-                  class="absolute top-[var(--h-navbar)] left-0 py-8 inset-x-0 bg-white border border-gray-200 shadow-md"
+                  class="absolute top-[var(--h-navbar)] left-0 py-6 inset-x-0 bg-white border border-gray-200 shadow-md"
                 >
-                  <div class="space-y-8">
-                    <div class="mx-2 flex flex-col gap-4">
+                  <div class="space-y-4">
+                    <div class="flex flex-col gap-4">
                       <RouterLink
                         v-for="route in routes"
                         :key="route.name"
                         :to="route.path"
                         class="px-4 py-3 text-lg"
-                        active-class="bg-blue-100 text-blue-500"
+                        active-class="text-blue-500"
                       >
                         {{ route.name }}
                       </RouterLink>
@@ -104,14 +106,14 @@ const handleLogout = async () => {
 
                     <!-- User Actions -->
                     <div
-                      class="mx-2 py-4 flex flex-col gap-8 border-t-2 border-gray-600"
+                      class="mx-4 py-4 flex flex-col gap-8 border-t-2 border-gray-600"
                     >
                       <div v-if="user" class="flex flex-col space-y-4">
                         <div class="space-x-2">
                           <span class="py-4">Logged as</span>
-                          <span class="font-semibold">{{
-                            user.displayName
-                          }}</span>
+                          <span class="font-semibold">
+                            {{ user.displayName }}
+                          </span>
                         </div>
                         <button
                           @click="handleLogout()"
