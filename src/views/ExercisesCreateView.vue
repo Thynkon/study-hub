@@ -34,6 +34,7 @@ const route = useRoute();
 
 const subjectId = route.params.id as string;
 const subjectsStore = useSubjectsStore();
+const subject = subjectsStore.getSubject(subjectId);
 
 const u = {} as User;
 
@@ -42,7 +43,7 @@ const questions = ref<Question[]>([
 ]);
 
 const exercise = ref<Exercise>(
-  new Exercise('', u, '', '', questions.value as Question[], [])
+  new Exercise('', u, '', '', questions.value as Question[], subject)
 );
 
 const formData = reactive(exercise);
@@ -84,7 +85,7 @@ const v$ = useVuelidate(rules, formData);
 onMounted(async () => {
   const subject = await subjectsStore.getSubject(subjectId);
   console.log(subject);
-  exercise.value.subjects = [subject.ref];
+  exercise.value.subject = subject.ref;
 });
 </script>
 

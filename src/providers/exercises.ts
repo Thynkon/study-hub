@@ -55,16 +55,13 @@ export default class ExercisesProvider {
         title: exercise.title,
         theory: exercise.theory,
         author: await this._author(),
-        subjects: exercise.subjects,
+        subject: exercise.subject,
         questions: questionRefs,
       });
 
       // Append exercise to subject's exercises
-      exercise.subjects.forEach(async (subject) => {
-        // Append exercise to subject's exercises
-        await updateDoc(doc(db, 'subjects', subject.id), {
-          exercises: arrayUnion(exerciseRef),
-        });
+      await updateDoc(doc(db, 'subjects', exercise.subject.id), {
+        exercises: arrayUnion(exerciseRef),
       });
     });
 

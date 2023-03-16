@@ -12,7 +12,7 @@ defineProps<{
 const route = useRoute();
 
 const handleDelete = async (exercise) => {
-  const subjectId = exercise.subjects[0].id;
+  const subjectId = exercise.subject.id;
   await ExercisesProvider.delete(exercise);
 
   router.push({ name: 'subject', params: { id: subjectId } });
