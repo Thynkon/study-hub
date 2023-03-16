@@ -10,6 +10,7 @@ import {
   updateDoc
 } from 'firebase/firestore';
 import { useCurrentUser } from 'vuefire';
+import ExercisesProvider from './exercises';
 
 const { notify } = useNotification();
 const user = useCurrentUser();
@@ -72,6 +73,11 @@ export default class SubjectsProvider {
   }
 
   public static delete(subject: any) {
+    // Delete subject exercises
+    subject.exercises.forEach((exercise: any) => {
+      ExercisesProvider.delete(exercise);
+    });
+
     // Delete subject
     deleteDoc(doc(db, 'subjects', subject.id));
     notify({
