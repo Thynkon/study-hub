@@ -1,24 +1,22 @@
 <script setup lang="ts">
-import { useVuelidate } from '@vuelidate/core';
+import SubjectsProvider from '@/providers/subjects';
 import {
-  TransitionRoot,
-  TransitionChild,
   Dialog,
   DialogPanel,
   DialogTitle,
+  TransitionChild,
+  TransitionRoot,
 } from '@headlessui/vue';
+import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { onMounted, reactive } from 'vue';
 import ErrorAlert from '../ErrorAlert.vue';
-import { useSubjectsStore } from '@/stores/subjects';
 
 const props = defineProps<{
   subject: any;
   isOpen: boolean;
   closeModal: () => void;
 }>();
-
-const subjectsStore = useSubjectsStore();
 
 const onSubmit = async (e) => {
   const result = await v$.value.$validate();
@@ -28,7 +26,7 @@ const onSubmit = async (e) => {
   }
 
   // Update subject in subjects collection
-  await subjectsStore.updateSubject(props.subject, {
+  await SubjectsProvider.update(props.subject, {
     name: formData.name,
     description: formData.description,
   });
