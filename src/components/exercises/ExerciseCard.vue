@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type Exercise from '@/models/exercise';
-import DeleteButton from '../buttons/DeleteButton.vue';
 import ExercisesProvider from '@/providers/exercises';
 import router from '@/router';
 import { useRoute } from 'vue-router';
+import DeleteButton from '../buttons/DeleteButton.vue';
 
 defineProps<{
   exercise: Exercise;
@@ -12,8 +12,10 @@ defineProps<{
 const route = useRoute();
 
 const handleDelete = async (exercise) => {
+  const subjectId = exercise.subjects[0].id;
   await ExercisesProvider.delete(exercise);
-  router.push(route.path);
+
+  router.push({ name: 'subject', params: { id: subjectId } });
 };
 </script>
 

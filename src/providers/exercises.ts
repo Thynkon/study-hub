@@ -1,19 +1,20 @@
 import { db } from '@/firebase';
 import type Exercise from '@/models/exercise';
 import router from '@/router';
-import { notify } from '@kyvg/vue3-notification';
+import { useNotification } from '@kyvg/vue3-notification';
 import {
   addDoc,
+  arrayRemove,
+  arrayUnion,
   collection,
   deleteDoc,
   doc,
   getDoc,
-  updateDoc,
-  arrayUnion,
-  arrayRemove
+  updateDoc
 } from 'firebase/firestore';
-import { useRoute } from 'vue-router';
 import { useCollection, useCurrentUser } from 'vuefire';
+
+const { notify } = useNotification();
 
 export default class ExercisesProvider {
   public static all() {
@@ -82,7 +83,7 @@ export default class ExercisesProvider {
       await deleteDoc(doc(db, 'questions', question.id));
     });
 
-    // Delete subject
+    // Delete exercise
     await deleteDoc(doc(db, 'exercises', exercise.id));
 
     // Finally, remove exercise from subject's exercises

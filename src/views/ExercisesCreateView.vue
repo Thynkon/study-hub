@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue';
-import useVuelidate from '@vuelidate/core';
-import Question from '@/models/question';
+import ErrorAlert from '@/components/ErrorAlert.vue';
+import DeleteButton from '@/components/buttons/DeleteButton.vue';
 import Answer from '@/models/answer';
 import Exercise from '@/models/exercise';
+import Question from '@/models/question';
 import type User from '@/models/user';
 import ExercisesProvider from '@/providers/exercises';
-import ErrorAlert from '@/components/ErrorAlert.vue';
 import router from '@/router';
 import { useSubjectsStore } from '@/stores/subjects';
-import { useRoute } from 'vue-router';
 import { PlusIcon } from '@heroicons/vue/20/solid';
+import useVuelidate from '@vuelidate/core';
 import { helpers, required } from '@vuelidate/validators';
-import DeleteButton from '@/components/buttons/DeleteButton.vue';
+import { onMounted, reactive, ref } from 'vue';
+import { useRoute } from 'vue-router';
 
 const rules = {
   title: { required },
@@ -52,7 +52,7 @@ const formData = reactive(exercise);
 */
 
 const handleAddAnswer = (question: Question) => {
-  question.answers.push({} as Answer);
+  question.answers.push(new Answer('', '', false));
 };
 
 const handleRemoveAnswer = (question: Question, answer: Answer) => {
@@ -83,6 +83,7 @@ const v$ = useVuelidate(rules, formData);
 
 onMounted(async () => {
   const subject = await subjectsStore.getSubject(subjectId);
+  console.log(subject);
   exercise.value.subjects = [subject.ref];
 });
 </script>

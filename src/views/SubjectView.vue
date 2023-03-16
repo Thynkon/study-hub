@@ -6,8 +6,8 @@ import { useDocument } from 'vuefire';
 import type Subject from '@/models/subject';
 
 import SuccessAlert from '@/components/SuccessAlert.vue';
-import type Exercise from '@/models/exercise';
 import ExerciseCard from '@/components/exercises/ExerciseCard.vue';
+import type Exercise from '@/models/exercise';
 import router from '@/router';
 
 const props = defineProps<{
