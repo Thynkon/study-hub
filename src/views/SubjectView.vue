@@ -25,6 +25,7 @@ const handleCreate = (subject: Subject) => {
   <div>
     <SuccessAlert position="top right" group="subjects" />
     <SuccessAlert position="top right" group="exercises" />
+    <notifications position="bottom right" />
 
     <div class="space-y-4">
       <div class="py-8 space-y-4">
@@ -51,14 +52,19 @@ const handleCreate = (subject: Subject) => {
         <!-- List -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
           <ExerciseCard
+            v-if="subject?.exercises?.length > 0"
             v-for="exercise in subject?.exercises"
             :key="exercise.id"
             :exercise="(exercise as Exercise)"
+            :subject="subject as Subject"
             @click="
               router.push({ name: 'exercise', params: { id: exercise.id } })
             "
           >
           </ExerciseCard>
+          <div v-else>
+            <p class="text-gray-500">No exercises yet.</p>
+          </div>
         </div>
       </div>
     </div>

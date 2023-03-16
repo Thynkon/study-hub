@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import router from '@/router';
 import { db } from '@/firebase';
+import router from '@/router';
 import { collection } from 'firebase/firestore';
+import { ref } from 'vue';
 import { useCollection } from 'vuefire';
 
 import type Subject from '@/models/subject';
@@ -41,12 +41,16 @@ const isCreationModalOpen = ref(false);
       <!-- Subjects list -->
       <div class="pt-16 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
         <SubjectCard
+          v-if="subjects?.length > 0"
           v-for="subject in subjects"
           :key="subject.id"
           :subject="(subject as Subject)"
           @click="router.push({ name: 'subject', params: { id: subject.id } })"
         >
         </SubjectCard>
+        <div v-else>
+          <p class="text-gray-500">No subjects yet.</p>
+        </div>
       </div>
     </div>
   </div>

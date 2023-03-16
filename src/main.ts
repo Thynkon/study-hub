@@ -1,9 +1,9 @@
-import { createApp } from 'vue';
-import { createPinia } from 'pinia';
-import { VueFire, VueFireAuth } from 'vuefire';
-import { firebaseApp } from './firebase';
 import Notifications from '@kyvg/vue3-notification';
+import { createPinia } from 'pinia';
+import { createApp } from 'vue';
+import { VueFire, VueFireAuth } from 'vuefire';
 import App from './App.vue';
+import { firebaseApp } from './firebase';
 import router from './router';
 
 import './assets/main.css';
