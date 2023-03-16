@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue';
-import useVuelidate from '@vuelidate/core';
-import Question from '@/models/question';
+import ErrorAlert from '@/components/ErrorAlert.vue';
+import DeleteButton from '@/components/buttons/DeleteButton.vue';
 import Answer from '@/models/answer';
 import Exercise from '@/models/exercise';
+import Question from '@/models/question';
 import type User from '@/models/user';
 import ExercisesProvider from '@/providers/exercises';
-import ErrorAlert from '@/components/ErrorAlert.vue';
 import router from '@/router';
 import { useSubjectsStore } from '@/stores/subjects';
-import { useRoute } from 'vue-router';
 import { PlusIcon } from '@heroicons/vue/20/solid';
+import useVuelidate from '@vuelidate/core';
 import { helpers, required } from '@vuelidate/validators';
-import DeleteButton from '@/components/buttons/DeleteButton.vue';
+import { onMounted, reactive, ref } from 'vue';
+import { useRoute } from 'vue-router';
 
 const rules = {
   title: { required },
@@ -34,6 +34,7 @@ const route = useRoute();
 
 const subjectId = route.params.id as string;
 const subjectsStore = useSubjectsStore();
+const subject = subjectsStore.getSubject(subjectId);
 
 const u = {} as User;
 
@@ -42,7 +43,7 @@ const questions = ref<Question[]>([
 ]);
 
 const exercise = ref<Exercise>(
-  new Exercise('', u, '', '', questions.value as Question[], [])
+  new Exercise('', u, '', '', questions.value as Question[], subject)
 );
 
 const formData = reactive(exercise);
@@ -52,7 +53,7 @@ const formData = reactive(exercise);
 */
 
 const handleAddAnswer = (question: Question) => {
-  question.answers.push({} as Answer);
+  question.answers.push(new Answer('', '', false));
 };
 
 const handleRemoveAnswer = (question: Question, answer: Answer) => {
@@ -83,7 +84,8 @@ const v$ = useVuelidate(rules, formData);
 
 onMounted(async () => {
   const subject = await subjectsStore.getSubject(subjectId);
-  exercise.value.subjects = [subject.ref];
+  console.log(subject);
+  exercise.value.subject = subject.ref;
 });
 </script>
 
