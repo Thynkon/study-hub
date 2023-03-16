@@ -50,7 +50,7 @@ export default class SubjectsProvider {
     });
   }
 
-  public async get(id: string) {
+  public static async get(id: string) {
     // Get subject from subjects collection
     const subject = await getDoc(doc(db, 'subjects', id));
 

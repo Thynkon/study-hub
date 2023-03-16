@@ -6,8 +6,8 @@ import Exercise from '@/models/exercise';
 import Question from '@/models/question';
 import type User from '@/models/user';
 import ExercisesProvider from '@/providers/exercises';
+import SubjectsProvider from '@/providers/subjects';
 import router from '@/router';
-import { useSubjectsStore } from '@/stores/subjects';
 import { PlusIcon } from '@heroicons/vue/20/solid';
 import useVuelidate from '@vuelidate/core';
 import { helpers, required } from '@vuelidate/validators';
@@ -33,8 +33,7 @@ const rules = {
 const route = useRoute();
 
 const subjectId = route.params.id as string;
-const subjectsStore = useSubjectsStore();
-const subject = subjectsStore.getSubject(subjectId);
+const subject = SubjectsProvider.get(subjectId);
 
 const u = {} as User;
 
@@ -83,8 +82,7 @@ const onSubmit = async () => {
 const v$ = useVuelidate(rules, formData);
 
 onMounted(async () => {
-  const subject = await subjectsStore.getSubject(subjectId);
-  console.log(subject);
+  const subject = await SubjectsProvider.get(subjectId);
   exercise.value.subject = subject.ref;
 });
 </script>

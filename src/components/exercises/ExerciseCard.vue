@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import DeleteButton from '@/components/buttons/DeleteButton.vue';
 import type Exercise from '@/models/exercise';
 import type Subject from '@/models/subject';
 import ExercisesProvider from '@/providers/exercises';
 import router from '@/router';
-import DeleteButton from '../buttons/DeleteButton.vue';
 
 const props = defineProps<{
   exercise: Exercise;
