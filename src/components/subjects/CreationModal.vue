@@ -1,23 +1,25 @@
 <script setup lang="ts">
-import { useVuelidate } from '@vuelidate/core';
+import Subject from '@/models/subject';
+import SubjectsProvider from '@/providers/subjects';
 import {
-  TransitionRoot,
-  TransitionChild,
   Dialog,
   DialogPanel,
   DialogTitle,
+  TransitionChild,
+  TransitionRoot,
 } from '@headlessui/vue';
+import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { reactive } from 'vue';
+import { useCurrentUser } from 'vuefire';
 import ErrorAlert from '../ErrorAlert.vue';
-import { useSubjectsStore } from '@/stores/subjects';
 
 const props = defineProps<{
   isOpen: boolean;
   closeModal: () => void;
 }>();
 
-const subjectsStore = useSubjectsStore();
+const user = useCurrentUser();
 
 const onSubmit = async () => {
   const result = await v$.value.$validate();
@@ -26,11 +28,9 @@ const onSubmit = async () => {
     return;
   }
 
-  await subjectsStore.createSubject({
-    name: formData.name,
-    slug: formData.slug,
-    description: formData.description,
-  });
+  await SubjectsProvider.create(
+    new Subject('', user, formData.name, formData.slug, formData.description)
+  );
 
   props.closeModal();
 };

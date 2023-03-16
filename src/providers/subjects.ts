@@ -1,26 +1,21 @@
-import { defineStore } from 'pinia';
 import { db } from '@/firebase';
+import type Subject from '@/models/subject';
+import { useNotification } from '@kyvg/vue3-notification';
 import {
   addDoc,
   collection,
   deleteDoc,
   doc,
   getDoc,
-  updateDoc,
+  updateDoc
 } from 'firebase/firestore';
-import { useNotification } from '@kyvg/vue3-notification';
 import { useCurrentUser } from 'vuefire';
 
 const { notify } = useNotification();
 const user = useCurrentUser();
 
-export type Message = {
-  $message: string;
-  type: number;
-};
-
-export const useSubjectsStore = defineStore('subjects', () => {
-  async function createSubject(data) {
+export default class SubjectsProvider {
+  public static async create(subject: Subject) {
     if (!user.value) {
       console.log('You must be logged in to create a subject');
 
@@ -42,9 +37,9 @@ export const useSubjectsStore = defineStore('subjects', () => {
 
     // Create subject in subjects collection
     await addDoc(collection(db, 'subjects'), {
-      name: data.name,
-      description: data.description,
-      slug: data.slug,
+      name: subject.name,
+      description: subject.description,
+      slug: subject.slug,
       author: authorRef,
     });
 
@@ -55,14 +50,14 @@ export const useSubjectsStore = defineStore('subjects', () => {
     });
   }
 
-  async function getSubject(id: string) {
+  public async get(id: string) {
     // Get subject from subjects collection
     const subject = await getDoc(doc(db, 'subjects', id));
 
     return subject;
   }
 
-  async function updateSubject(subject, data) {
+  public static async update(subject, data) {
     // Update subject in subjects collection
     updateDoc(doc(db, 'subjects', subject.id), {
       name: data.name,
@@ -76,7 +71,7 @@ export const useSubjectsStore = defineStore('subjects', () => {
     });
   }
 
-  function deleteSubject(subject: any) {
+  public static delete(subject: any) {
     // Delete subject
     deleteDoc(doc(db, 'subjects', subject.id));
     notify({
@@ -85,6 +80,4 @@ export const useSubjectsStore = defineStore('subjects', () => {
       title: 'Subject deleted successfully',
     });
   }
-
-  return { getSubject, createSubject, updateSubject, deleteSubject };
-});
+}
