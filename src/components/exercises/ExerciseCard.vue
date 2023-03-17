@@ -5,6 +5,8 @@ import type Subject from '@/models/subject';
 import ExercisesProvider from '@/providers/exercises';
 
 import DeleteButton from '@/components/buttons/DeleteButton.vue';
+import DeleteModal from '@/components/DeleteModal.vue';
+import { ref } from 'vue';
 
 defineProps<{
   exercise: Exercise;
@@ -12,8 +14,10 @@ defineProps<{
 }>();
 
 const handleDelete = async (exercise: Exercise) => {
-  await ExercisesProvider.delete(exercise);
+  isDeleteModalOpen.value = true;
 };
+
+const isDeleteModalOpen = ref(false);
 </script>
 
 <template>
@@ -31,5 +35,10 @@ const handleDelete = async (exercise: Exercise) => {
     </div>
 
     <DeleteButton @click.stop="handleDelete(exercise)" />
+    <DeleteModal
+      :isOpen="isDeleteModalOpen"
+      :closeModal="() => (isDeleteModalOpen = false)"
+      :onConfirm="async () => await ExercisesProvider.delete(exercise)"
+    />
   </div>
 </template>

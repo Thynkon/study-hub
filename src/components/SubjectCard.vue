@@ -30,7 +30,7 @@ const isDeleteModalOpen = ref(false);
     <DeleteModal
       :isOpen="isDeleteModalOpen"
       :closeModal="() => (isDeleteModalOpen = false)"
-      :onConfirm="() => SubjectsProvider.delete(subject)"
+      :onConfirm="async () => await SubjectsProvider.delete(subject)"
     />
   </div>
 </template>
