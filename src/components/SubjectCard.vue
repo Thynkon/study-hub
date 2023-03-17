@@ -1,17 +1,18 @@
 <script setup lang="ts">
-import DeleteButton from '@/components/buttons/DeleteButton.vue';
-import type Subject from '@/models/subject';
-import SubjectsProvider from '@/providers/subjects';
 import router from '@/router';
+
+import type Subject from '@/models/subject';
+
+import SubjectsProvider from '@/providers/subjects';
+
+import DeleteButton from '@/components/buttons/DeleteButton.vue';
 
 defineProps<{
   subject: Subject;
 }>();
 
-const handleDelete = (subject: Subject) => {
-  SubjectsProvider.delete(subject);
-
-  router.push('/subjects');
+const handleDelete = async (subject: Subject) => {
+  await SubjectsProvider.delete(subject);
 };
 </script>
 
@@ -23,6 +24,7 @@ const handleDelete = (subject: Subject) => {
       <h2 class="text-xl font-bold">{{ subject.name }}</h2>
       <p>{{ subject.description }}</p>
     </div>
-    <DeleteButton @onClick="handleDelete(subject)" />
+
+    <DeleteButton @click.stop="handleDelete(subject)" />
   </div>
 </template>

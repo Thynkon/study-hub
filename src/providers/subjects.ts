@@ -1,5 +1,4 @@
 import { db } from '@/firebase';
-import type Subject from '@/models/subject';
 import { useNotification } from '@kyvg/vue3-notification';
 import {
   addDoc,
@@ -7,10 +6,13 @@ import {
   deleteDoc,
   doc,
   getDoc,
-  updateDoc
+  updateDoc,
 } from 'firebase/firestore';
 import { useCurrentUser } from 'vuefire';
-import ExercisesProvider from './exercises';
+
+import ExercisesProvider from '@/providers/exercises';
+
+import type Subject from '@/models/subject';
 
 const { notify } = useNotification();
 const user = useCurrentUser();
@@ -58,7 +60,7 @@ export default class SubjectsProvider {
     return subject;
   }
 
-  public static async update(subject, data) {
+  public static async update(subject: Subject, data: any) {
     // Update subject in subjects collection
     updateDoc(doc(db, 'subjects', subject.id), {
       name: data.name,
@@ -72,14 +74,15 @@ export default class SubjectsProvider {
     });
   }
 
-  public static delete(subject: any) {
+  public static async delete(subject: Subject) {
     // Delete subject exercises
-    subject.exercises.forEach((exercise: any) => {
-      ExercisesProvider.delete(exercise);
+    subject.exercises.forEach(async (exercise: any) => {
+      await ExercisesProvider.delete(exercise);
     });
 
     // Delete subject
-    deleteDoc(doc(db, 'subjects', subject.id));
+    await deleteDoc(doc(db, 'subjects', subject.id));
+
     notify({
       type: 'success',
       group: 'subjects',
