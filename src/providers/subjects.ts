@@ -76,7 +76,7 @@ export default class SubjectsProvider {
 
   public static async delete(subject: Subject) {
     // Delete subject exercises
-    subject.exercises.forEach(async (exercise: any) => {
+    subject.exercises?.forEach(async (exercise: any) => {
       await ExercisesProvider.delete(exercise);
     });
 

@@ -1,19 +1,20 @@
 <script setup lang="ts">
-import router from '@/router';
-
 import type Subject from '@/models/subject';
 
-import SubjectsProvider from '@/providers/subjects';
-
+import DeleteModal from '@/components/DeleteModal.vue';
 import DeleteButton from '@/components/buttons/DeleteButton.vue';
+import SubjectsProvider from '@/providers/subjects';
+import { ref } from 'vue';
 
 defineProps<{
   subject: Subject;
 }>();
 
 const handleDelete = async (subject: Subject) => {
-  await SubjectsProvider.delete(subject);
+  isDeleteModalOpen.value = true;
 };
+
+const isDeleteModalOpen = ref(false);
 </script>
 
 <template>
@@ -26,5 +27,10 @@ const handleDelete = async (subject: Subject) => {
     </div>
 
     <DeleteButton @click.stop="handleDelete(subject)" />
+    <DeleteModal
+      :isOpen="isDeleteModalOpen"
+      :closeModal="() => (isDeleteModalOpen = false)"
+      :onConfirm="() => SubjectsProvider.delete(subject)"
+    />
   </div>
 </template>

@@ -57,7 +57,7 @@ const handleCreate = (subject: Subject) => {
         >
           <ExerciseCard
             v-for="exercise in subject?.exercises"
-            :key="exercise.id"
+            :key="exercise?.id"
             :exercise="(exercise as Exercise)"
             :subject="(subject as Subject)"
             @click="
