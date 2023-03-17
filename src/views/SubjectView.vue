@@ -1,14 +1,15 @@
 <script setup lang="ts">
+import router from '@/router';
+
 import { db } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import { useDocument } from 'vuefire';
 
 import type Subject from '@/models/subject';
+import type Exercise from '@/models/exercise';
 
 import SuccessAlert from '@/components/SuccessAlert.vue';
 import ExerciseCard from '@/components/exercises/ExerciseCard.vue';
-import type Exercise from '@/models/exercise';
-import router from '@/router';
 
 const props = defineProps<{
   id: string;
@@ -50,21 +51,23 @@ const handleCreate = (subject: Subject) => {
         </div>
 
         <!-- List -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+        <div
+          v-if="subject?.exercises?.length > 0"
+          class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8"
+        >
           <ExerciseCard
-            v-if="subject?.exercises?.length > 0"
             v-for="exercise in subject?.exercises"
             :key="exercise.id"
             :exercise="(exercise as Exercise)"
-            :subject="subject as Subject"
+            :subject="(subject as Subject)"
             @click="
               router.push({ name: 'exercise', params: { id: exercise.id } })
             "
           >
           </ExerciseCard>
-          <div v-else>
-            <p class="text-gray-500">No exercises yet.</p>
-          </div>
+        </div>
+        <div v-else>
+          <p class="text-gray-500">No exercises yet.</p>
         </div>
       </div>
     </div>
