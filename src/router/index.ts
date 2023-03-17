@@ -39,7 +39,7 @@ const router = createRouter({
     },
     {
       path: '/subjects/:id',
-      name: 'subject',
+      name: 'subjects.show',
       component: SubjectView,
       props: true,
     },

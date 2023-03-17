@@ -39,18 +39,22 @@ const isCreationModalOpen = ref(false);
       </div>
 
       <!-- Subjects list -->
-      <div class="pt-16 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+      <div
+        v-if="subjects?.length > 0"
+        class="pt-16 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8"
+      >
         <SubjectCard
-          v-if="subjects?.length > 0"
           v-for="subject in subjects"
           :key="subject.id"
           :subject="(subject as Subject)"
-          @click="router.push({ name: 'subject', params: { id: subject.id } })"
+          @click="
+            router.push({ name: 'subjects.show', params: { id: subject.id } })
+          "
         >
         </SubjectCard>
-        <div v-else>
-          <p class="text-gray-500">No subjects yet.</p>
-        </div>
+      </div>
+      <div v-else>
+        <p class="text-gray-500">No subjects yet.</p>
       </div>
     </div>
   </div>

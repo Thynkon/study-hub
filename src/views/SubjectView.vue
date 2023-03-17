@@ -63,7 +63,7 @@ const handleCreate = (subject: Subject) => {
             @click="
               router.push({
                 name: 'exercise',
-                params: { id: exercise.id, subject: subject?.name },
+                params: { id: exercise.id },
               })
             "
           >

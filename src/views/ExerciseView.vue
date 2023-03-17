@@ -8,7 +8,6 @@ import ExerciseQuiz from '@/components/exercises/ExerciseQuiz.vue';
 
 const props = defineProps<{
   id: string;
-  // subject: string;
 }>();
 
 const questionIndex = ref(0);
@@ -23,9 +22,27 @@ const currentQuestion = computed(() => {
 <template>
   <div>
     <div class="py-8 space-y-4">
-      <h2 class="text-4xl font-bold text-gray-900">
-        {{ exercise?.title }}
-      </h2>
+      <!-- Title -->
+      <div class="flex space-x-4 items-center text-4xl font-bold text-gray-900">
+        <RouterLink
+          :to="{
+            name: 'subjects.show',
+            params: { id: exercise?.subject?.id ?? 0 },
+          }"
+          class="hover:bg-gray-200 rounded px-2 -mx-2"
+        >
+          <h2>
+            {{ exercise?.subject.name }}
+          </h2>
+        </RouterLink>
+
+        <span class="text-gray-400">/</span>
+
+        <h2 class="">
+          {{ exercise?.title }}
+        </h2>
+      </div>
+
       <p>{{ exercise?.theory }}</p>
     </div>
 
