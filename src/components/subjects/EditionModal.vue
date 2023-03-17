@@ -18,7 +18,7 @@ const props = defineProps<{
   closeModal: () => void;
 }>();
 
-const onSubmit = async (e) => {
+const onSubmit = async () => {
   const result = await v$.value.$validate();
   if (!result) {
     console.log('Validation failed');

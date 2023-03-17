@@ -1,12 +1,12 @@
 <script setup lang="ts">
-const props = defineProps<{
+defineProps<{
   group: string;
   position: string;
 }>();
 </script>
 
 <template>
-  <notifications :group="props.group" :position="props.position">
+  <notifications :group="group" :position="position">
     <template #body="props">
       <div
         class="flex p-4 mb-4 text-green-800 rounded-lg bg-green-50"
