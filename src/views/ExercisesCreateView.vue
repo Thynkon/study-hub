@@ -149,7 +149,7 @@ onMounted(async () => {
             <ErrorAlert :errors="v$.questions.$errors" />
 
             <DeleteButton
-              @onClick="handleRemoveQuestion(question as Question)"
+              @click="handleRemoveQuestion(question as Question)"
               class="btn-icon"
             />
           </div>
@@ -213,7 +213,7 @@ onMounted(async () => {
                   </button>
                   <DeleteButton
                     class="btn-icon"
-                    @onClick="
+                    @click="
                       handleRemoveAnswer(question as Question, answer as Answer)
                     "
                   />

@@ -3,5 +3,5 @@ import { TrashIcon } from '@heroicons/vue/20/solid';
 </script>
 
 <template>
-  <TrashIcon class="btn-icon mt-0 p-0" @click.prevent="$emit('onClick')" />
+  <TrashIcon class="btn-icon mt-0 p-0" />
 </template>
