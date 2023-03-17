@@ -20,7 +20,7 @@ const selectAnswer = (answer: any) => {
 
 <template>
   <div class="space-y-4">
-    <h4>
+    <h4 class="text-lg">
       {{ question?.caption }}
     </h4>
 

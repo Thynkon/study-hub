@@ -55,7 +55,7 @@ const currentQuestion = computed(() => {
       <ExerciseQuiz :question="currentQuestion" />
 
       <div class="flex justify-end items-center">
-        <button class="btn-primary w-full md:w-auto md:px-8">Next</button>
+        <button class="btn-primary py-4 md:px-8 w-full md:w-auto">Next</button>
       </div>
     </div>
   </div>
