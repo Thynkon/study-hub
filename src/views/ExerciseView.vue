@@ -7,12 +7,16 @@ import { useDocument } from 'vuefire';
 import type Question from '@/models/question';
 
 import ExerciseQuiz from '@/components/exercises/ExerciseQuiz.vue';
+import ExerciseResult from '@/components/exercises/ExerciseResult.vue';
 
 const props = defineProps<{
   id: string;
 }>();
 
+const quiz = ref<InstanceType<typeof ExerciseQuiz> | null>(null);
 const questionIndex = ref(0);
+const showAnswer = ref(false);
+const showResult = ref(false);
 
 const exercise = useDocument(doc(db, 'exercises', props.id));
 
@@ -20,14 +24,36 @@ const currentQuestion = computed(() => {
   return exercise.value?.questions[questionIndex.value] as Question;
 });
 
-const handleResult = (result: boolean) => {
-  exercise.value!.questions[questionIndex.value].success = result;
-};
+const canGoNext = computed(() => {
+  return questionIndex.value + 1 < exercise.value?.questions.length;
+});
+
+const quizIsCompleted = computed(() => {
+  return (
+    questionIndex.value + 1 === exercise.value?.questions.length &&
+    showAnswer.value
+  );
+});
 
 const handleNext = () => {
-  if (questionIndex.value + 1 >= exercise.value?.questions.length)
-    console.log('Quiz finished');
-  else questionIndex.value++;
+  if (canGoNext.value) {
+    showAnswer.value = false;
+    questionIndex.value++;
+  } else {
+    showResult.value = true;
+  }
+};
+
+const handleResult = () => {
+  // Add result to feed bar
+  exercise.value!.questions[questionIndex.value].success =
+    currentQuestion.value.answers.every(
+      (answer) =>
+        answer.is_correct === (answer.selected == undefined ? false : true)
+    );
+
+  // Show question answer(s)
+  showAnswer.value = true;
 };
 </script>
 
@@ -36,22 +62,24 @@ const handleNext = () => {
     <!-- Exercise -->
     <div class="space-y-4">
       <!-- Title -->
-      <div class="flex space-x-4 items-center text-4xl font-bold text-gray-900">
+      <div
+        class="flex flex-col md:flex-row gap-12 md:gap-4 text-4xl font-bold text-gray-900"
+      >
         <RouterLink
           :to="{
             name: 'subjects.show',
             params: { id: exercise?.subject?.id ?? 0 },
           }"
-          class="hover:bg-gray-200 rounded px-2 -mx-2"
+          class="hover:bg-gray-200 rounded md:px-2 md:-mx-2"
         >
           <h2>
             {{ exercise?.subject.name }}
           </h2>
         </RouterLink>
 
-        <span class="text-gray-400">/</span>
+        <span class="hidden md:block text-gray-400">/</span>
 
-        <h2 class="">
+        <h2 class="text-center w-full md:w-auto">
           {{ exercise?.title }}
         </h2>
       </div>
@@ -60,7 +88,9 @@ const handleNext = () => {
     </div>
 
     <!-- Quiz -->
-    <div class="space-y-8">
+    <ExerciseResult v-if="showResult" :questions="exercise?.questions" />
+
+    <div v-else class="space-y-8">
       <div class="space-y-4">
         <h2 class="text-2xl font-bold text-gray-900">
           Question {{ questionIndex + 1 }} / {{ exercise?.questions.length }}
@@ -85,10 +115,19 @@ const handleNext = () => {
       </div>
 
       <ExerciseQuiz
+        ref="quiz"
         :question="currentQuestion"
-        @handleResult="(result) => handleResult(result)"
-        @handleNext="handleNext()"
+        :show-answer="showAnswer"
       />
+
+      <div class="flex justify-end items-center">
+        <button
+          @click="showAnswer ? handleNext() : handleResult()"
+          class="btn-primary py-4 md:px-8 w-full md:w-auto"
+        >
+          {{ quizIsCompleted ? 'Finish' : showAnswer ? 'Next' : 'Check' }}
+        </button>
+      </div>
     </div>
   </div>
 </template>

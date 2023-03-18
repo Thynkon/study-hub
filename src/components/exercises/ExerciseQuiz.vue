@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 
 import { XCircleIcon, CheckCircleIcon } from '@heroicons/vue/20/solid';
 
@@ -10,11 +10,8 @@ import type Answer from '@/models/answer';
 
 const props = defineProps<{
   question: Question;
+  showAnswer?: boolean;
 }>();
-
-const emit = defineEmits(['handleResult', 'handleNext']);
-
-const showAnswer = ref(false);
 
 const shuffled = computed(() => {
   return Shuffle(props.question?.answers) as Answer[];
@@ -22,22 +19,6 @@ const shuffled = computed(() => {
 
 const selectAnswer = (answer: Answer) => {
   answer.selected = !answer.selected;
-};
-
-const handleAnswer = () => {
-  const result = shuffled.value.every(
-    (answer) =>
-      answer.is_correct === (answer.selected == undefined ? false : true)
-  );
-
-  emit('handleResult', result);
-
-  showAnswer.value = true;
-};
-
-const handleNext = () => {
-  showAnswer.value = false;
-  emit('handleNext');
 };
 </script>
 
@@ -88,15 +69,6 @@ const handleNext = () => {
           ]"
         />
       </div>
-    </div>
-
-    <div class="flex justify-end items-center">
-      <button
-        @click="showAnswer ? handleNext() : handleAnswer()"
-        class="btn-primary py-4 md:px-8 w-full md:w-auto"
-      >
-        {{ showAnswer ? 'Next' : 'Check' }}
-      </button>
     </div>
   </div>
 </template>
