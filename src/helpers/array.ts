@@ -1,4 +1,4 @@
-export default function shuffle(array: any[]): any[] {
+export default function shuffle(array: any[] | undefined): any[] {
   if (array === undefined) return [];
 
   for (let i = array.length - 1; i > 0; i--) {

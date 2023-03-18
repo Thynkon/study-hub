@@ -10,7 +10,14 @@ export default class Subject {
   public name: string;
   public description: string;
 
-  constructor(id: string, author: User, name: string, slug: string, description: string, exercises: Exercise[] = []) {
+  constructor(
+    id: string,
+    author: User,
+    name: string,
+    slug: string,
+    description: string,
+    exercises: Exercise[] = []
+  ) {
     this._id = id;
     this._author = author;
     this._exercises = exercises;
