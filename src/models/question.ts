@@ -1,10 +1,11 @@
-import type Answer from './answer';
+import type Answer from '@/models/answer';
 
 export default class Question {
   private _id: string;
   private _answers: Answer[];
 
   public caption: string;
+  public success: boolean | undefined;
 
   constructor(id: string, caption: string, answers: Answer[]) {
     this._id = id;
@@ -25,6 +26,6 @@ export default class Question {
   }
 
   public get correctAnswer(): Answer | undefined {
-    return this._answers.find((answer) => answer.isCorrect);
+    return this._answers.find((answer) => answer.is_correct);
   }
 }

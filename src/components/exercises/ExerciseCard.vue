@@ -22,7 +22,7 @@ const isDeleteModalOpen = ref(false);
 
 <template>
   <div
-    class="flex items-center p-4 bg-white rounded-lg shadow-md shadow-gray-300 space-y-8 cursor-pointer hover:scale-105 transition-transform"
+    class="p-4 flex items-center space-y-8 bg-white rounded-lg shadow-md shadow-gray-300 cursor-pointer hover:scale-105 transition-transform"
   >
     <div class="grow">
       <h2 class="text-xl font-bold">{{ exercise.title }}</h2>
