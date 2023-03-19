@@ -3,7 +3,7 @@ import { computed } from 'vue';
 
 import type Question from '@/models/question';
 
-import ExerciseQuiz from '@/components/exercises/ExerciseQuiz.vue';
+import QuizQuestion from '@/components/quiz/QuizQuestion.vue';
 
 const props = defineProps<{
   questions: Question[];
@@ -50,7 +50,7 @@ const isSuccessful = computed(() => {
         Question {{ index + 1 }}
       </span>
 
-      <ExerciseQuiz :question="question" :show-answer="true" />
+      <QuizQuestion :question="question" :show-answer="true" />
     </div>
   </div>
 </template>
