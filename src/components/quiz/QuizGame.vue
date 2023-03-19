@@ -3,6 +3,7 @@ import { computed, ref } from 'vue';
 
 import type Question from '@/models/question';
 
+import QuizQuestionFeed from '@/components/quiz/QuizQuestionFeed.vue';
 import QuizQuestion from '@/components/quiz/QuizQuestion.vue';
 import QuizResult from '@/components/quiz/QuizResult.vue';
 
@@ -57,22 +58,10 @@ const handleResult = () => {
           Question {{ questionIndex + 1 }} / {{ questions.length }}
         </h2>
 
-        <div class="flex space-x-2">
-          <div
-            v-for="question in (questions as Question[])"
-            :key="question.id"
-            class="w-8 h-1 rounded-sm"
-            :class="[
-              question.success == undefined
-                ? currentQuestion === question
-                  ? 'bg-gray-400'
-                  : 'bg-gray-200'
-                : question.success
-                ? 'bg-green-500'
-                : 'bg-red-500',
-            ]"
-          />
-        </div>
+        <QuizQuestionFeed
+          :questions="questions"
+          :current-question="currentQuestion"
+        />
       </div>
 
       <QuizQuestion

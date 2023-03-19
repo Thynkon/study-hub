@@ -3,6 +3,7 @@ import { computed } from 'vue';
 
 import type Question from '@/models/question';
 
+import QuizQuestionFeed from '@/components/quiz/QuizQuestionFeed.vue';
 import QuizQuestion from '@/components/quiz/QuizQuestion.vue';
 
 const props = defineProps<{
@@ -45,12 +46,18 @@ const isSuccessful = computed(() => {
       </div>
     </div>
 
-    <div v-for="(question, index) in props.questions" :key="question.id">
-      <span class="text-xl italic text-gray-700">
-        Question {{ index + 1 }}
-      </span>
+    <div class="space-y-4">
+      <QuizQuestionFeed :questions="props.questions" />
 
-      <QuizQuestion :question="question" :show-answer="true" />
+      <div class="space-y-12">
+        <div v-for="(question, index) in props.questions" :key="question.id">
+          <span class="text-xl italic text-gray-700">
+            Question {{ index + 1 }}
+          </span>
+
+          <QuizQuestion :question="question" :show-answer="true" />
+        </div>
+      </div>
     </div>
   </div>
 </template>
