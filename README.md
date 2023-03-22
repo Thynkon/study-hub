@@ -1,4 +1,5 @@
 # Study Hub
+
 <a name="readme-top"></a>
 <details>
   <summary>Table of Contents</summary>
@@ -21,20 +22,15 @@
 
 ### Built With
 
-
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
 ## Getting Started
 
 ### Prerequisites
+
 - [NPM](https://www.npmjs.com/)
 - [TypeScript](https://www.typescriptlang.org/)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-### Configuration
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -48,6 +44,16 @@ Compile and Hot-Reload for Development
 
 ```sh
 npm run dev
+```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+### Container
+
+Build and launch the container
+
+```sh
+docker-compose up --build
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
