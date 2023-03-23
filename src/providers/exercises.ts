@@ -95,6 +95,11 @@ export default class ExercisesProvider {
   }
 
   public static async answer(exercise: Exercise, questions: Question[]) {
+    // If the user is not logged in, we don't save the answers
+    if (!useCurrentUser().value) {
+      return;
+    }
+
     // We have to manually fetch the references to the questions and exercise
     // so we can store a reference in the fulfillment document instead of raw data
     // of the whole objects
