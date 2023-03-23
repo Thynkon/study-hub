@@ -44,7 +44,6 @@ const handleNext = async () => {
 };
 
 const handleResult = async () => {
-  console.log('handleResult');
   // Add result to feed bar
   currentQuestion.value.success = currentQuestion.value.answers.every(
     (answer) =>

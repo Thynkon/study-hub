@@ -40,9 +40,7 @@ const handleLogin = async (fn: () => Promise<any>) => {
     .then(() => {
       router.push('/');
     })
-    .catch((error) => {
-      console.log(error);
-    });
+    .catch(() => {});
 };
 
 const formData = reactive({

@@ -20,7 +20,6 @@ const props = defineProps<{
 const onSubmit = async () => {
   const result = await v$.value.$validate();
   if (!result) {
-    console.log('Validation failed');
     return;
   }
 
