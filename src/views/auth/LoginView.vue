@@ -29,18 +29,15 @@ const LoginWithForm = async () => {
   const result = await v$.value.$validate();
   if (!result) return;
 
-  await handleLogin(() =>
-    AuthProvider.login(formData.email, formData.password)
-  );
-};
-
-const handleLogin = async (fn: () => Promise<any>) => {
-  await auth
-    .login(await fn())
+  await handleLogin(() => AuthProvider.login(formData.email, formData.password))
     .then(() => {
       router.push('/');
     })
     .catch(() => {});
+};
+
+const handleLogin = async (fn: () => Promise<any>) => {
+  await auth.login(await fn());
 };
 
 const formData = reactive({
@@ -115,9 +112,10 @@ onMounted(async () => {
 
       <button
         type="submit"
-        class="w-full px-4 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded text-lg"
+        class="w-full btn-primary flex items-center justify-center"
       >
-        Login
+        <SpinnerIcon v-if="auth.isLoading" class="text-white" />
+        <span>Login</span>
       </button>
     </form>
 

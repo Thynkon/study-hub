@@ -3,12 +3,16 @@ import router from '@/router';
 
 import { useCurrentUser, useFirebaseAuth } from 'vuefire';
 
+import { useAuthStore } from '@/stores/auth';
+
 import Dropdown from '@/components/Dropdown.vue';
 import ProfileIcon from '@/components/icons/ProfileIcon.vue';
 import HamburgerIcon from '@/components/icons/HamburgerIcon.vue';
+import SpinnerIcon from '@/components/icons/SpinnerIcon.vue';
 
 const routes = router.getRoutes().filter((route) => route.meta?.inNavbar);
 
+const auth = useAuthStore();
 const user = useCurrentUser();
 
 const handleLogout = async () => {
@@ -74,9 +78,10 @@ const handleLogout = async () => {
               <RouterLink
                 v-else
                 to="/login"
-                class="py-1 px-4 font-medium text-lg text-white bg-blue-500 hover:bg-blue-600 rounded-md"
+                class="btn-primary flex items-center"
               >
-                Login
+                <SpinnerIcon v-if="auth.isLoading" class="text-white" />
+                <span>Login</span>
               </RouterLink>
             </div>
           </div>

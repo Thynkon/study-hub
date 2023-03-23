@@ -27,6 +27,7 @@ export default class OAuthProvider {
 
         auth?.updateCurrentUser(user);
 
+        // If the user is new, register him in firebase
         if (getAdditionalUserInfo(result)?.isNewUser) {
           useAuthStore().register(() => {
             return user;

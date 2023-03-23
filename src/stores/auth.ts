@@ -13,15 +13,20 @@ export type Error = {
 };
 
 export const useAuthStore = defineStore('auth', () => {
+  const isLoading = ref(false);
+
   const loginErrors = ref<Error[]>([]);
   const registerErrors = ref<Error[]>([]);
 
   async function login(login: Function) {
     try {
+      isLoading.value = true;
       await login();
-    } catch (error) {
+    } catch (error: any) {
       loginErrors.value = [{ $message: error.message }];
       throw error;
+    } finally {
+      isLoading.value = false;
     }
   }
 
@@ -34,7 +39,7 @@ export const useAuthStore = defineStore('auth', () => {
         name: user.displayName,
         email: user.email,
       });
-    } catch (error) {
+    } catch (error: any) {
       registerErrors.value = [{ $message: error.message }];
       throw error;
     }
@@ -44,5 +49,13 @@ export const useAuthStore = defineStore('auth', () => {
     await signOut(auth!);
   }
 
-  return { login, register, logout, loginErrors, registerErrors, Error };
+  return {
+    isLoading,
+    login,
+    register,
+    logout,
+    loginErrors,
+    registerErrors,
+    Error,
+  };
 });
