@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import ErrorAlert from '@/components/ErrorAlert.vue';
-
 import router from '@/router';
 import useVuelidate from '@vuelidate/core';
 import {
@@ -14,7 +12,10 @@ import { computed, reactive } from 'vue';
 import { RouterLink } from 'vue-router';
 
 import { useAuthStore } from '@/stores/auth';
+
 import AuthProvider from '@/providers/authentication/manual';
+
+import ErrorAlert from '@/components/ErrorAlert.vue';
 
 const auth = useAuthStore();
 

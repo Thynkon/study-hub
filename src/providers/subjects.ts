@@ -20,8 +20,6 @@ const user = useCurrentUser();
 export default class SubjectsProvider {
   public static async create(subject: Subject) {
     if (!user.value) {
-      console.log('You must be logged in to create a subject');
-
       notify({
         type: 'error',
         group: 'subjects',

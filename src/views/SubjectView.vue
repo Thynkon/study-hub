@@ -26,7 +26,6 @@ const handleCreate = (subject: Subject) => {
   <div>
     <SuccessAlert position="top right" group="subjects" />
     <SuccessAlert position="top right" group="exercises" />
-    <notifications position="bottom right" />
 
     <div class="space-y-4">
       <div class="py-8 space-y-4">

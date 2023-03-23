@@ -1,34 +1,34 @@
 import type User from '@/models/user';
+import type { DocumentData, DocumentReference } from 'firebase/firestore';
 import type Exercise from './exercise';
 
 export default class Subject {
-  private _id: string;
   private _author: User;
   private _exercises: Exercise[];
   private _slug: string;
 
+  public id: string;
+  public ref: DocumentReference<DocumentData>;
   public name: string;
   public description: string;
 
   constructor(
     id: string,
+    ref: any = null,
     author: User,
     name: string,
     slug: string,
     description: string,
     exercises: Exercise[] = []
   ) {
-    this._id = id;
     this._author = author;
     this._exercises = exercises;
     this._slug = slug;
 
+    this.id = id;
+    this.ref = ref;
     this.name = name;
     this.description = description;
-  }
-
-  public get id(): string {
-    return this._id;
   }
 
   public get author(): User {

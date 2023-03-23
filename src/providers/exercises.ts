@@ -16,6 +16,7 @@ import type Exercise from '@/models/exercise';
 import type Question from '@/models/question';
 
 const { notify } = useNotification();
+const user = useCurrentUser();
 
 export default class ExercisesProvider {
   public static all() {
@@ -23,7 +24,6 @@ export default class ExercisesProvider {
   }
 
   private static async _author() {
-    const user = useCurrentUser();
     const documentName = user.value?.uid;
 
     // Get author reference
@@ -36,6 +36,16 @@ export default class ExercisesProvider {
   }
 
   public static async create(exercise: Exercise) {
+    if (!user.value) {
+      notify({
+        type: 'error',
+        group: 'exercises',
+        title: 'You must be logged in to create an exercise',
+      });
+
+      throw new Error('You must be logged in to create an exercise');
+    }
+
     // First, create exercise's questions in firebase
     // Create subject in subjects collection
     const questionsRef = exercise.questions.map(async (question) => {
@@ -56,7 +66,7 @@ export default class ExercisesProvider {
         title: exercise.title,
         theory: exercise.theory,
         author: await this._author(),
-        subject: exercise.subject,
+        subject: exercise.subject.ref,
         questions: questionRefs,
       });
 
@@ -96,7 +106,7 @@ export default class ExercisesProvider {
 
   public static async answer(exercise: Exercise, questions: Question[]) {
     // If the user is not logged in, we don't save the answers
-    if (!useCurrentUser().value) {
+    if (!user.value) {
       return;
     }
 

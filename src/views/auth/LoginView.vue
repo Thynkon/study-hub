@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import ErrorAlert from '@/components/ErrorAlert.vue';
-
 import AuthProvider from '@/providers/authentication/manual';
 import GithubProvider from '@/providers/authentication/github';
 import GoogleProvider from '@/providers/authentication/google';
@@ -13,6 +11,9 @@ import { email, required } from '@vuelidate/validators';
 import useVuelidate from '@vuelidate/core';
 
 import { useAuthStore } from '@/stores/auth';
+
+import ErrorAlert from '@/components/ErrorAlert.vue';
+import SpinnerIcon from '@/components/icons/SpinnerIcon.vue';
 
 const route = useRoute();
 const auth = useAuthStore();
