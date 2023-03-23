@@ -105,11 +105,7 @@ const v$ = useVuelidate(rules, formData);
 
       <!-- Buttons -->
       <div class="flex space-x-4">
-        <button
-          class="w-full px-4 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded text-lg"
-        >
-          Register
-        </button>
+        <button class="w-full btn-primary">Register</button>
       </div>
     </form>
 

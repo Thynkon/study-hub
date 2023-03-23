@@ -44,7 +44,7 @@ const handleCreate = (subject: Subject) => {
 
           <button
             @click.prevent="handleCreate(subject as Subject)"
-            class="btn-primary"
+            class="btn-secondary"
           >
             New
           </button>

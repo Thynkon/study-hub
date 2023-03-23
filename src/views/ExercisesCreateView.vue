@@ -127,7 +127,7 @@ onMounted(async () => {
             <h3>Questions ({{ questions.length }})</h3>
           </div>
 
-          <button @click.prevent="handleAddQuestion" class="btn-primary">
+          <button @click.prevent="handleAddQuestion" class="btn-secondary">
             Add question
           </button>
         </div>

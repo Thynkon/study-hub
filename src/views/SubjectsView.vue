@@ -27,7 +27,7 @@ const isCreationModalOpen = ref(false);
           <h2>Subjects</h2>
         </div>
 
-        <button @click="isCreationModalOpen = true" class="btn-primary">
+        <button @click="isCreationModalOpen = true" class="btn-secondary">
           New
         </button>
       </div>
