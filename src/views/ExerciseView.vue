@@ -42,6 +42,10 @@ const exercise = useDocument(doc(db, 'exercises', props.id));
       <p>{{ exercise?.theory }}</p>
     </div>
 
-    <QuizGame v-if="exercise?.questions" :questions="exercise?.questions" />
+    <QuizGame
+      v-if="exercise?.questions"
+      :questions="exercise?.questions"
+      :exercise="exercise"
+    />
   </div>
 </template>

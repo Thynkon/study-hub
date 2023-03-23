@@ -13,6 +13,7 @@ import {
 import { useCollection, useCurrentUser } from 'vuefire';
 
 import type Exercise from '@/models/exercise';
+import type Question from '@/models/question';
 
 const { notify } = useNotification();
 
@@ -43,7 +44,7 @@ export default class ExercisesProvider {
         answers: question.answers.map((answer) => {
           return {
             value: answer.value,
-            is_correct: answer.isCorrect,
+            is_correct: answer.is_correct,
           };
         }),
       });
@@ -90,6 +91,28 @@ export default class ExercisesProvider {
       type: 'success',
       group: 'exercises',
       title: 'Exercise deleted successfully',
+    });
+  }
+
+  public static async answer(exercise: Exercise, questions: Question[], answers: any) {
+    // We have to manually fetch the references to the questions and exercise
+    // so we can store a reference in the fulfillment document instead of raw data
+    // of the whole objects
+    const exerciseRef = doc(db, 'exercises', exercise.id);
+    const questionsRef = questions.map((question) => {
+      return doc(db, 'questions', question.id);
+    });
+
+    // Check if there is an existing fulfillment for this question
+    return await addDoc(collection(db, 'fulfillments'), {
+      author: await this._author(),
+      exercise: exerciseRef,
+      result: questionsRef.map((questionRef, index) => {
+        return {
+          question: questionRef,
+          answer: answers[index].value,
+        }
+      }),
     });
   }
 }

@@ -1,13 +1,18 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 
 import type Question from '@/models/question';
 
-import QuizQuestionFeed from '@/components/quiz/QuizQuestionFeed.vue';
 import QuizQuestion from '@/components/quiz/QuizQuestion.vue';
+import QuizQuestionFeed from '@/components/quiz/QuizQuestionFeed.vue';
+import type Answer from '@/models/answer';
+import type Exercise from '@/models/exercise';
+import ExercisesProvider from '@/providers/exercises';
 
 const props = defineProps<{
+  exercise: Exercise;
   questions: Question[];
+  answers: Answer[];
 }>();
 
 const score = computed(() => {
@@ -20,6 +25,14 @@ const stats = computed(() => {
 
 const isSuccessful = computed(() => {
   return stats.value >= 50;
+});
+
+onMounted(async () => {
+  await ExercisesProvider.answer(
+    props.exercise,
+    props.questions,
+    props.answers
+  );
 });
 </script>
 
