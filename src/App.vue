@@ -22,10 +22,10 @@ const handleLogout = async () => {
   <div class="min-h-screen bg-gray-50">
     <header>
       <nav
-        class="h-[var(--h-navbar)] bg-white border-gray-200 rounded shadow-lg"
+        class="px-8 h-[var(--h-navbar)] bg-white border-gray-200 rounded shadow-lg"
       >
         <div
-          class="mx-8 xl:mx-auto max-w-7xl h-full flex flex-wrap items-center justify-between space-x-4"
+          class="mx-auto max-w-7xl h-full flex flex-wrap items-center justify-between space-x-4"
         >
           <RouterLink to="/" class="flex items-center">
             <span class="text-xl font-semibold whitespace-nowrap">
@@ -133,6 +133,8 @@ const handleLogout = async () => {
       </nav>
     </header>
 
-    <RouterView class="mx-8 xl:mx-auto max-w-7xl" />
+    <main class="mx-8">
+      <RouterView class="mx-auto max-w-7xl" />
+    </main>
   </div>
 </template>

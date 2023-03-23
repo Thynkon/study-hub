@@ -56,77 +56,67 @@ const v$ = useVuelidate(rules, formData);
 </script>
 
 <template>
-  <main class="mx-4 md:mx-8 lg:mx-16 xl:mx-32">
-    <div
-      class="py-16 w-full flex items-center justify-center flex-col space-y-4"
+  <div class="py-40 max-w-lg flex flex-col items-center space-y-4">
+    <h2 class="uppercase text-center">Register</h2>
+
+    <form
+      @submit.prevent="handleRegister()"
+      class="w-full flex flex-col space-y-6"
     >
-      <div class="max-w-lg w-full space-y-12">
-        <h2 class="uppercase text-center">Register</h2>
+      <ErrorAlert :errors="auth.registerErrors" />
+
+      <div class="space-y-4">
+        <ErrorAlert :errors="v$.name.$errors" />
+
+        <div class="space-y-4">
+          <label>Name</label>
+          <input type="text" v-model="formData.name" />
+        </div>
       </div>
 
-      <form
-        @submit.prevent="handleRegister()"
-        class="max-w-lg w-full flex flex-col space-y-6"
-      >
-        <ErrorAlert :errors="auth.registerErrors" />
+      <div class="space-y-4">
+        <ErrorAlert :errors="v$.email.$errors" />
 
         <div class="space-y-4">
-          <ErrorAlert :errors="v$.name.$errors" />
-
-          <div class="space-y-4">
-            <label>Name</label>
-            <input type="text" v-model="formData.name" />
-          </div>
+          <label>Email</label>
+          <input type="email" v-model="formData.email" />
         </div>
+      </div>
+
+      <div class="space-y-4">
+        <ErrorAlert :errors="v$.password.$errors" />
 
         <div class="space-y-4">
-          <ErrorAlert :errors="v$.email.$errors" />
-
-          <div class="space-y-4">
-            <label>Email</label>
-            <input type="email" v-model="formData.email" />
-          </div>
+          <label>Password</label>
+          <input type="password" name="password" v-model="formData.password" />
         </div>
+      </div>
+
+      <div class="space-y-4">
+        <ErrorAlert :errors="v$.passwordConfirmation.$errors" />
 
         <div class="space-y-4">
-          <ErrorAlert :errors="v$.password.$errors" />
-
-          <div class="space-y-4">
-            <label>Password</label>
-            <input
-              type="password"
-              name="password"
-              v-model="formData.password"
-            />
-          </div>
+          <label>Password Confirmation</label>
+          <input
+            type="password"
+            name="password_confirmation"
+            v-model="formData.passwordConfirmation"
+          />
         </div>
+      </div>
 
-        <div class="space-y-4">
-          <ErrorAlert :errors="v$.passwordConfirmation.$errors" />
+      <!-- Buttons -->
+      <div class="flex space-x-4">
+        <button
+          class="w-full px-4 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded text-lg"
+        >
+          Register
+        </button>
+      </div>
+    </form>
 
-          <div class="space-y-4">
-            <label>Password Confirmation</label>
-            <input
-              type="password"
-              name="password_confirmation"
-              v-model="formData.passwordConfirmation"
-            />
-          </div>
-        </div>
-
-        <!-- Buttons -->
-        <div class="flex space-x-4">
-          <button
-            class="w-full px-4 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded text-lg"
-          >
-            Register
-          </button>
-        </div>
-      </form>
-
-      <router-link to="/login" class="text-gray-600 hover:text-gray-800">
-        Already registered ?
-      </router-link>
-    </div>
-  </main>
+    <router-link to="/login" class="text-gray-600 hover:text-gray-800">
+      Already registered ?
+    </router-link>
+  </div>
 </template>
