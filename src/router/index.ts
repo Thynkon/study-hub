@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { getCurrentUser } from 'vuefire';
 
-import HomeView from '@/views/HomeView.vue';
 const LoginView = () => import('@/views/auth/LoginView.vue');
 const RegisterView = () => import('@/views/auth/RegisterView.vue');
 
@@ -17,7 +16,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView,
+      component: SubjectsView,
     },
     {
       path: '/login',
@@ -28,14 +27,6 @@ const router = createRouter({
       path: '/register',
       name: 'register',
       component: RegisterView,
-    },
-    {
-      path: '/subjects',
-      name: 'subjects',
-      component: SubjectsView,
-      meta: {
-        inNavbar: true,
-      },
     },
     {
       path: '/subjects/:id',
