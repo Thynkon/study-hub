@@ -3,6 +3,8 @@ import { db } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import { useDocument } from 'vuefire';
 
+import type Exercise from '@/models/exercise';
+
 import QuizGame from '@/components/quiz/QuizGame.vue';
 
 const props = defineProps<{
@@ -45,7 +47,7 @@ const exercise = useDocument(doc(db, 'exercises', props.id));
     <QuizGame
       v-if="exercise?.questions"
       :questions="exercise?.questions"
-      :exercise="exercise"
+      :exercise="(exercise as Exercise)"
     />
   </div>
 </template>

@@ -1,18 +1,21 @@
 <script setup lang="ts">
-import ErrorAlert from '@/components/ErrorAlert.vue';
-import DeleteButton from '@/components/buttons/DeleteButton.vue';
-import Answer from '@/models/answer';
-import Exercise from '@/models/exercise';
-import Question from '@/models/question';
-import type User from '@/models/user';
-import ExercisesProvider from '@/providers/exercises';
-import SubjectsProvider from '@/providers/subjects';
 import router from '@/router';
 import { PlusIcon } from '@heroicons/vue/20/solid';
 import useVuelidate from '@vuelidate/core';
 import { helpers, required } from '@vuelidate/validators';
 import { onMounted, reactive, ref } from 'vue';
 import { useRoute } from 'vue-router';
+
+import type User from '@/models/user';
+import Answer from '@/models/answer';
+import Exercise from '@/models/exercise';
+import Question from '@/models/question';
+
+import ExercisesProvider from '@/providers/exercises';
+import SubjectsProvider from '@/providers/subjects';
+
+import ErrorAlert from '@/components/ErrorAlert.vue';
+import DeleteButton from '@/components/buttons/DeleteButton.vue';
 
 const rules = {
   title: { required },
@@ -76,7 +79,7 @@ const onSubmit = async () => {
 
   await ExercisesProvider.create(exercise.value as Exercise);
   // Redirect to /subjects/:id
-  router.push({ name: 'subject', params: { id: subjectId } });
+  router.push({ name: 'subjects.show', params: { id: subjectId } });
 };
 
 const v$ = useVuelidate(rules, formData);
@@ -200,16 +203,16 @@ onMounted(async () => {
                   </label>
                   <button
                     type="button"
-                    @click="answer.isCorrect = !answer.isCorrect"
+                    @click="answer.is_correct = !answer.is_correct"
                     class="py-2 w-20 font-semibold rounded-md"
                     :class="{
                       'text-green-400 hover:text-green-500 bg-green-100 hover:bg-green-200':
-                        answer.isCorrect,
+                        answer.is_correct,
                       'text-red-400 hover:text-red-500 bg-red-100 hover:bg-red-200':
-                        !answer.isCorrect,
+                        !answer.is_correct,
                     }"
                   >
-                    {{ answer.isCorrect ? 'Valid' : 'Invalid' }}
+                    {{ answer.is_correct ? 'Valid' : 'Invalid' }}
                   </button>
                   <DeleteButton
                     class="btn-icon"
