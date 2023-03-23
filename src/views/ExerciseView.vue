@@ -19,9 +19,7 @@ const exercise = useDocument(doc(db, 'exercises', props.id));
     <!-- Exercise -->
     <div class="space-y-4">
       <!-- Title -->
-      <div
-        class="flex flex-col md:flex-row gap-12 md:gap-4 text-4xl font-bold text-gray-900"
-      >
+      <div class="flex flex-col md:flex-row gap-12 md:gap-4">
         <RouterLink
           :to="{
             name: 'subjects.show',
@@ -29,16 +27,12 @@ const exercise = useDocument(doc(db, 'exercises', props.id));
           }"
           class="hover:bg-gray-200 rounded md:px-2 md:-mx-2"
         >
-          <h2>
-            {{ exercise?.subject.name }}
-          </h2>
+          <h2>{{ exercise?.subject.name }}</h2>
         </RouterLink>
 
-        <span class="hidden md:block text-gray-400">/</span>
+        <span class="hidden md:block text-4xl text-gray-400">/</span>
 
-        <h2 class="text-center w-full md:w-auto">
-          {{ exercise?.title }}
-        </h2>
+        <h2 class="text-center w-full md:w-auto">{{ exercise?.title }}</h2>
       </div>
 
       <p>{{ exercise?.theory }}</p>

@@ -25,7 +25,7 @@ const isDeleteModalOpen = ref(false);
     class="flex items-center p-4 bg-white rounded-lg shadow-md shadow-gray-300 space-y-8 cursor-pointer hover:scale-105 transition-transform"
   >
     <div class="grow">
-      <h2 class="text-xl font-bold">{{ subject.name }}</h2>
+      <h2 class="text-xl">{{ subject.name }}</h2>
       <p>{{ subject.description }}</p>
     </div>
 

@@ -1,10 +1,10 @@
 <script setup lang="ts">
+import { onMounted, reactive, ref } from 'vue';
+import { useRoute } from 'vue-router';
 import router from '@/router';
 import { PlusIcon } from '@heroicons/vue/20/solid';
 import useVuelidate from '@vuelidate/core';
 import { helpers, required } from '@vuelidate/validators';
-import { onMounted, reactive, ref } from 'vue';
-import { useRoute } from 'vue-router';
 
 import type User from '@/models/user';
 import Answer from '@/models/answer';
@@ -78,7 +78,7 @@ const onSubmit = async () => {
   }
 
   await ExercisesProvider.create(exercise.value as Exercise);
-  // Redirect to /subjects/:id
+
   router.push({ name: 'subjects.show', params: { id: subjectId } });
 };
 
@@ -92,12 +92,12 @@ onMounted(async () => {
 
 <template>
   <div class="py-16 space-y-8">
-    <h2 class="text-4xl font-bold">New exercise</h2>
+    <h2>New exercise</h2>
 
     <form @submit.prevent="onSubmit" class="space-y-12">
       <!-- Exercise Section -->
       <div class="p-8 space-y-8 bg-white rounded-lg shadow-lg shadow-gray-300">
-        <h3 class="text-2xl font-bold">Exercise</h3>
+        <h3>Exercise</h3>
 
         <!-- Name -->
         <div class="space-y-4">
@@ -125,9 +125,7 @@ onMounted(async () => {
         <!-- Action bar -->
         <div class="flex justify-end items-center">
           <div class="grow">
-            <h3 class="text-2xl font-bold">
-              Questions ({{ questions.length }})
-            </h3>
+            <h3>Questions ({{ questions.length }})</h3>
           </div>
 
           <button @click.prevent="handleAddQuestion" class="btn-primary">
@@ -144,9 +142,7 @@ onMounted(async () => {
           <!-- Question -->
           <div class="flex gap-4">
             <div class="grow">
-              <h3 class="text-2xl font-bold">
-                Question {{ questionIndex + 1 }}
-              </h3>
+              <h3>Question {{ questionIndex + 1 }}</h3>
             </div>
 
             <ErrorAlert :errors="v$.questions.$errors" />
@@ -176,9 +172,7 @@ onMounted(async () => {
             <!-- Action bar -->
             <div class="flex justify-end items-center">
               <div class="grow">
-                <h4 class="text-2xl font-bold">
-                  Answers ({{ question.answers.length }})
-                </h4>
+                <h3>Answers ({{ question.answers.length }})</h3>
               </div>
 
               <PlusIcon

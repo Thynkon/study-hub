@@ -62,9 +62,7 @@ const handleResult = async () => {
     <QuizResult v-if="showResult" :questions="questions" />
     <div v-else class="space-y-8">
       <div class="space-y-4">
-        <h2 class="text-2xl font-bold text-gray-900">
-          Question {{ questionIndex + 1 }} / {{ questions.length }}
-        </h2>
+        <h3>Question {{ questionIndex + 1 }} / {{ questions.length }}</h3>
 
         <QuizQuestionFeed
           :questions="questions"

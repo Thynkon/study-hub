@@ -25,7 +25,7 @@ const isCreationModalOpen = ref(false);
       <!-- Action bar -->
       <div class="flex justify-end items-center">
         <div class="grow">
-          <h2 class="text-4xl font-bold text-gray-900">Subjects</h2>
+          <h2>Subjects</h2>
         </div>
 
         <button @click="isCreationModalOpen = true" class="btn-primary">

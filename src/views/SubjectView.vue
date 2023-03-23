@@ -30,7 +30,7 @@ const handleCreate = (subject: Subject) => {
 
     <div class="space-y-4">
       <div class="py-8 space-y-4">
-        <h2 class="text-4xl font-bold text-gray-900">{{ subject?.name }}</h2>
+        <h2>{{ subject?.name }}</h2>
         <p>{{ subject?.description }}</p>
       </div>
 
@@ -39,7 +39,7 @@ const handleCreate = (subject: Subject) => {
         <!-- Actions -->
         <div class="flex justify-end items-center">
           <div class="grow">
-            <h2 class="text-2xl font-bold text-gray-900">Exercises</h2>
+            <h3>Exercises</h3>
           </div>
 
           <button

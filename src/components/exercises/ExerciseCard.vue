@@ -25,7 +25,7 @@ const isDeleteModalOpen = ref(false);
     class="p-4 flex items-center space-y-8 bg-white rounded-lg shadow-md shadow-gray-300 cursor-pointer hover:scale-105 transition-transform"
   >
     <div class="grow">
-      <h2 class="text-xl font-bold">{{ exercise.title }}</h2>
+      <h2 class="text-xl">{{ exercise.title }}</h2>
       <p v-if="exercise?.theory?.length > 50">
         {{ exercise?.theory.substring(0, 50) }} ...
       </p>

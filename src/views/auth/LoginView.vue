@@ -76,7 +76,7 @@ onMounted(async () => {
       class="py-16 w-full flex items-center justify-center flex-col space-y-4"
     >
       <div class="max-w-lg w-full space-y-12">
-        <h2 class="text-3xl font-semibold uppercase text-center">Login</h2>
+        <h2 class="uppercase text-center">Login</h2>
 
         <!-- OAuth -->
         <div class="w-full flex space-x-2 font-semibold">
@@ -106,11 +106,7 @@ onMounted(async () => {
 
             <div class="space-y-4">
               <label>Email</label>
-              <input
-                type="email"
-                v-model="formData.email"
-                class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-lg"
-              />
+              <input type="email" v-model="formData.email" />
             </div>
           </div>
 
@@ -119,11 +115,7 @@ onMounted(async () => {
 
             <div class="space-y-4">
               <label>Password</label>
-              <input
-                type="password"
-                v-model="formData.password"
-                class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-lg"
-              />
+              <input type="password" v-model="formData.password" />
             </div>
           </div>
 

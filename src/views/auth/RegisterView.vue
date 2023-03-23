@@ -61,7 +61,7 @@ const v$ = useVuelidate(rules, formData);
       class="py-16 w-full flex items-center justify-center flex-col space-y-4"
     >
       <div class="max-w-lg w-full space-y-12">
-        <h2 class="text-3xl font-semibold uppercase text-center">Register</h2>
+        <h2 class="uppercase text-center">Register</h2>
       </div>
 
       <form
@@ -75,11 +75,7 @@ const v$ = useVuelidate(rules, formData);
 
           <div class="space-y-4">
             <label>Name</label>
-            <input
-              type="text"
-              v-model="formData.name"
-              class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-lg"
-            />
+            <input type="text" v-model="formData.name" />
           </div>
         </div>
 
@@ -88,11 +84,7 @@ const v$ = useVuelidate(rules, formData);
 
           <div class="space-y-4">
             <label>Email</label>
-            <input
-              type="email"
-              v-model="formData.email"
-              class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-lg"
-            />
+            <input type="email" v-model="formData.email" />
           </div>
         </div>
 
@@ -105,7 +97,6 @@ const v$ = useVuelidate(rules, formData);
               type="password"
               name="password"
               v-model="formData.password"
-              class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-lg"
             />
           </div>
         </div>
@@ -119,7 +110,6 @@ const v$ = useVuelidate(rules, formData);
               type="password"
               name="password_confirmation"
               v-model="formData.passwordConfirmation"
-              class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-lg"
             />
           </div>
         </div>

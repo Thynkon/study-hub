@@ -26,9 +26,9 @@ const isSuccessful = computed(() => {
 <template>
   <div class="space-y-12">
     <div class="text-center space-y-8">
-      <h3 class="font-bold text-4xl">Result</h3>
+      <h2>Result</h2>
 
-      <h3 class="text-2xl">
+      <h3>
         {{ isSuccessful ? 'Congratulations!' : 'The next time will be better' }}
       </h3>
 
