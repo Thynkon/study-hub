@@ -44,6 +44,7 @@ const isCreationModalOpen = ref(false);
           @click="
             router.push({ name: 'subjects.show', params: { id: subject.id } })
           "
+          class="clickable-card"
         >
         </SubjectCard>
       </div>

@@ -61,11 +61,9 @@ const handleCreate = (subject: Subject) => {
             :exercise="(exercise as Exercise)"
             :subject="(subject as Subject)"
             @click="
-              router.push({
-                name: 'exercise',
-                params: { id: exercise.id },
-              })
+              router.push({ name: 'exercise', params: { id: exercise.id } })
             "
+            class="clickable-card"
           >
           </ExerciseCard>
         </div>
