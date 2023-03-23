@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
-import type Answer from '@/models/answer';
 import type Question from '@/models/question';
 import type Exercise from '@/models/exercise';
 
@@ -25,8 +24,6 @@ const currentQuestion = computed(() => {
   return props.questions[questionIndex.value];
 });
 
-const answers = ref<Answer[]>([]);
-
 const canGoNext = computed(() => {
   return questionIndex.value + 1 < props.questions.length;
 });
@@ -40,11 +37,7 @@ const handleNext = async () => {
     showAnswer.value = false;
     questionIndex.value++;
   } else {
-    await ExercisesProvider.answer(
-      props.exercise,
-      props.questions,
-      answers.value
-    );
+    await ExercisesProvider.answer(props.exercise, props.questions);
 
     showResult.value = true;
   }
@@ -57,13 +50,6 @@ const handleResult = async () => {
     (answer) =>
       answer.is_correct === (answer.selected == undefined ? false : true)
   );
-
-  // Add result to answers
-  currentQuestion.value.answers.forEach((answer) => {
-    if (answer.selected) {
-      answers.value.push(answer as Answer);
-    }
-  });
 
   // Show question answer(s)
   showAnswer.value = true;

@@ -94,25 +94,24 @@ export default class ExercisesProvider {
     });
   }
 
-  public static async answer(exercise: Exercise, questions: Question[], answers: any) {
+  public static async answer(exercise: Exercise, questions: Question[]) {
     // We have to manually fetch the references to the questions and exercise
     // so we can store a reference in the fulfillment document instead of raw data
     // of the whole objects
     const exerciseRef = doc(db, 'exercises', exercise.id);
-    const questionsRef = questions.map((question) => {
-      return doc(db, 'questions', question.id);
-    });
 
     // Check if there is an existing fulfillment for this question
     return await addDoc(collection(db, 'fulfillments'), {
       author: await this._author(),
       exercise: exerciseRef,
-      result: questionsRef.map((questionRef, index) => {
-        return {
-          question: questionRef,
-          answer: answers[index].value,
-        }
-      }),
+      result: questions
+        .filter((q) => q.answers.some((a) => a.selected))
+        .map((q) => {
+          return {
+            question: doc(db, 'questions', q.id),
+            answers: q.answers.filter((a) => a.selected).map((a) => a.value),
+          };
+        }),
     });
   }
 }
