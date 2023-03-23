@@ -1,18 +1,20 @@
 <script setup lang="ts">
+import { ref } from 'vue';
+
 import type Subject from '@/models/subject';
 
-import DeleteModal from '@/components/DeleteModal.vue';
-import DeleteButton from '@/components/buttons/DeleteButton.vue';
 import SubjectsProvider from '@/providers/subjects';
-import { ref } from 'vue';
-import EditButton from './buttons/EditButton.vue';
-import SubjectEditModal from './subjects/SubjectEditModal.vue';
+
+import SubjectEditModal from '@/components/subjects/EditModal.vue';
+import EditButton from '@/components/buttons/EditButton.vue';
+import DeleteButton from '@/components/buttons/DeleteButton.vue';
+import DeleteModal from '@/components/DeleteModal.vue';
 
 defineProps<{
   subject: Subject;
 }>();
 
-const handleDelete = async (subject: Subject) => {
+const handleDelete = async () => {
   isDeleteModalOpen.value = true;
 };
 
@@ -31,7 +33,7 @@ const isDeleteModalOpen = ref(false);
 
     <div class="flex space-x-2">
       <EditButton @click.stop="() => (isEditModalOpen = true)" />
-      <DeleteButton @click.stop="handleDelete(subject)" />
+      <DeleteButton @click.stop="handleDelete()" />
     </div>
 
     <SubjectEditModal

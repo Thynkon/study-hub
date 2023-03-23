@@ -1,19 +1,18 @@
 <script setup lang="ts">
-import SubjectsProvider from '@/providers/subjects';
+import { useVuelidate } from '@vuelidate/core';
 import {
+  TransitionRoot,
+  TransitionChild,
   Dialog,
   DialogPanel,
   DialogTitle,
-  TransitionChild,
-  TransitionRoot,
 } from '@headlessui/vue';
-import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { onMounted, reactive } from 'vue';
 import ErrorAlert from '../ErrorAlert.vue';
 
 const props = defineProps<{
-  subject: any;
+  exercise: any;
   isOpen: boolean;
   closeModal: () => void;
 }>();
@@ -25,34 +24,24 @@ const onSubmit = async () => {
     return;
   }
 
-  // Update subject in subjects collection
-  await SubjectsProvider.update(props.subject, {
-    name: formData.name,
-    description: formData.description,
-  });
-
   props.closeModal();
 };
 
 const formData = reactive({
-  name: '',
-  description: '',
+  title: '',
+  theory: '',
 });
 
 const rules = {
-  name: { required },
-  description: {},
+  title: { required },
+  theory: {},
 };
 
 const v$ = useVuelidate(rules, formData);
 
 onMounted(async () => {
-  console.log('Current subject ==> ');
-  console.log(props);
-  formData.name = props.subject.name;
-  formData.description = props.subject.description;
-  console.log('Formdata set to ==> ');
-  console.log(formData);
+  formData.title = props.exercise.title;
+  formData.theory = props.exercise.theory;
 });
 </script>
 
@@ -96,19 +85,19 @@ onMounted(async () => {
                 <form @submit.prevent="onSubmit">
                   <div class="space-y-6 bg-white py-5">
                     <div>
-                      <ErrorAlert :errors="v$.name.$errors" />
+                      <ErrorAlert :errors="v$.title.$errors" />
                       <div>
                         <label
-                          for="name"
+                          for="title"
                           class="block text-sm font-medium text-gray-700"
                           >Name</label
                         >
                         <div class="mt-1 flex rounded-md shadow-sm">
                           <input
                             type="text"
-                            id="name"
+                            id="title"
                             class="w-full rounded-md ring-2 ring-gray-100 focus:ring-gray-200 sm:text-sm p-2"
-                            v-model="formData.name"
+                            v-model="formData.title"
                           />
                         </div>
                       </div>
@@ -119,19 +108,47 @@ onMounted(async () => {
                         <label
                           for="description"
                           class="block text-sm font-medium text-gray-700"
-                          >Description</label
+                          >Theory</label
                         >
                         <div class="mt-1">
                           <textarea
                             id="description"
                             rows="3"
-                            v-model="formData.description"
+                            v-model="formData.theory"
                             class="mt-1 w-full rounded-md ring-2 ring-gray-100 focus:ring-gray-200 shadow-sm focus:border-gray-500 sm:text-sm p-2"
                           ></textarea>
                         </div>
                       </div>
                       <div class="mt-4">
-                        <ErrorAlert :errors="v$.description.$errors" />
+                        <ErrorAlert :errors="v$.theory.$errors" />
+                      </div>
+                    </div>
+                    <div class="flex flex-col space-y-4">
+                      <div
+                        v-for="question in exercise.questions"
+                        :key="question.id"
+                        class="flex flex-col space-y-1"
+                      >
+                        <label
+                          for="description"
+                          class="block text-sm font-medium text-gray-700"
+                        >
+                          {{ question.caption }}
+                        </label>
+                        <div
+                          v-for="answer in question.answers"
+                          :key="answer.id"
+                          class="flex space-x-2"
+                        >
+                          <input
+                            type="radio"
+                            name="question-{{ question.id }}"
+                            :value="answer.value"
+                          />
+                          <label for="question-{{ question.id }}">
+                            {{ answer.value }}
+                          </label>
+                        </div>
                       </div>
                     </div>
                   </div>

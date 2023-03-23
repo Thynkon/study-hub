@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import { db } from '@/firebase';
-import type Exercise from '@/models/exercise';
-import { doc, type DocumentData } from '@firebase/firestore';
+import { doc } from '@firebase/firestore';
 import { useDocument } from 'vuefire';
+
+import type Exercise from '@/models/exercise';
 
 const props = defineProps<{
   exercise_id: string;

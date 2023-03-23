@@ -8,8 +8,7 @@ import { useCollection } from 'vuefire';
 import type Subject from '@/models/subject';
 
 import SuccessAlert from '@/components/SuccessAlert.vue';
-
-import SubjectCard from '@/components/SubjectCard.vue';
+import SubjectCard from '@/components/subjects/SubjectCard.vue';
 import SubjectCreationModal from '@/components/subjects/CreationModal.vue';
 
 const subjects = useCollection(collection(db, 'subjects'));
@@ -31,11 +30,6 @@ const isCreationModalOpen = ref(false);
         <button @click="isCreationModalOpen = true" class="btn-primary">
           New
         </button>
-
-        <SubjectCreationModal
-          :isOpen="isCreationModalOpen"
-          :closeModal="() => (isCreationModalOpen = false)"
-        />
       </div>
 
       <!-- Subjects list -->
@@ -57,5 +51,10 @@ const isCreationModalOpen = ref(false);
         <p class="text-gray-500">No subjects yet.</p>
       </div>
     </div>
+
+    <SubjectCreationModal
+      :isOpen="isCreationModalOpen"
+      :closeModal="() => (isCreationModalOpen = false)"
+    />
   </div>
 </template>

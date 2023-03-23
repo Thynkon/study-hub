@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { reactive } from 'vue';
 import {
   Dialog,
   DialogPanel,
@@ -9,20 +8,17 @@ import {
 } from '@headlessui/vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
-import { useCurrentUser } from 'vuefire';
-
-import Subject from '@/models/subject';
+import { onMounted, reactive } from 'vue';
 
 import SubjectsProvider from '@/providers/subjects';
 
 import ErrorAlert from '@/components/ErrorAlert.vue';
 
 const props = defineProps<{
+  subject: any;
   isOpen: boolean;
   closeModal: () => void;
 }>();
-
-const user = useCurrentUser();
 
 const onSubmit = async () => {
   const result = await v$.value.$validate();
@@ -31,26 +27,35 @@ const onSubmit = async () => {
     return;
   }
 
-  await SubjectsProvider.create(
-    new Subject('', user, formData.name, formData.slug, formData.description)
-  );
+  // Update subject in subjects collection
+  await SubjectsProvider.update(props.subject, {
+    name: formData.name,
+    description: formData.description,
+  });
 
   props.closeModal();
 };
 
 const formData = reactive({
   name: '',
-  slug: '',
   description: '',
 });
 
 const rules = {
   name: { required },
-  slug: { required },
   description: {},
 };
 
 const v$ = useVuelidate(rules, formData);
+
+onMounted(async () => {
+  console.log('Current subject ==> ');
+  console.log(props);
+  formData.name = props.subject.name;
+  formData.description = props.subject.description;
+  console.log('Formdata set to ==> ');
+  console.log(formData);
+});
 </script>
 
 <template>
@@ -70,7 +75,7 @@ const v$ = useVuelidate(rules, formData);
 
       <div class="fixed inset-0 overflow-y-auto">
         <div
-          class="p-4 flex min-h-full items-center justify-center text-center"
+          class="flex min-h-full items-center justify-center p-4 text-center"
         >
           <TransitionChild
             as="template"
@@ -82,9 +87,9 @@ const v$ = useVuelidate(rules, formData);
             leave-to="opacity-0 scale-95"
           >
             <DialogPanel
-              class="p-6 w-full max-w-md transform overflow-hidden rounded-2xl bg-white text-left align-middle shadow-xl transition-all"
+              class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
             >
-              <DialogTitle as="h3">Create a new subject</DialogTitle>
+              <DialogTitle as="h3">Edit</DialogTitle>
 
               <form @submit.prevent="onSubmit">
                 <div class="py-5 space-y-6 bg-white">
@@ -98,16 +103,6 @@ const v$ = useVuelidate(rules, formData);
                     <input type="text" id="name" v-model="formData.name" />
                   </div>
 
-                  <!-- Slug -->
-                  <div class="space-y-2">
-                    <ErrorAlert :errors="v$.slug.$errors" />
-
-                    <label for="slug" class="font-medium text-gray-700"
-                      >Slug</label
-                    >
-                    <input type="text" id="slug" v-model="formData.slug" />
-                  </div>
-
                   <!-- Description -->
                   <div class="space-y-2">
                     <ErrorAlert :errors="v$.description.$errors" />
@@ -119,7 +114,7 @@ const v$ = useVuelidate(rules, formData);
                       id="description"
                       rows="3"
                       v-model="formData.description"
-                    />
+                    ></textarea>
                   </div>
                 </div>
 

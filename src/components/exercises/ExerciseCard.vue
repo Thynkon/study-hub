@@ -13,7 +13,7 @@ defineProps<{
   subject: Subject;
 }>();
 
-const handleDelete = async (exercise: Exercise) => {
+const handleDelete = () => {
   isDeleteModalOpen.value = true;
 };
 
@@ -34,7 +34,8 @@ const isDeleteModalOpen = ref(false);
       </p>
     </div>
 
-    <DeleteButton @click.stop="handleDelete(exercise)" />
+    <DeleteButton @click.stop="handleDelete()" />
+
     <DeleteModal
       :isOpen="isDeleteModalOpen"
       :closeModal="() => (isDeleteModalOpen = false)"
