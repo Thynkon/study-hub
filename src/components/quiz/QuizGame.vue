@@ -3,11 +3,13 @@ import { computed, ref } from 'vue';
 
 import type Answer from '@/models/answer';
 import type Question from '@/models/question';
+import type Exercise from '@/models/exercise';
+
+import ExercisesProvider from '@/providers/exercises';
 
 import QuizQuestion from '@/components/quiz/QuizQuestion.vue';
 import QuizQuestionFeed from '@/components/quiz/QuizQuestionFeed.vue';
 import QuizResult from '@/components/quiz/QuizResult.vue';
-import type Exercise from '@/models/exercise';
 
 const props = defineProps<{
   exercise: Exercise;
@@ -33,11 +35,17 @@ const quizIsCompleted = computed(() => {
   return questionIndex.value + 1 === props.questions.length && showAnswer.value;
 });
 
-const handleNext = () => {
+const handleNext = async () => {
   if (canGoNext.value) {
     showAnswer.value = false;
     questionIndex.value++;
   } else {
+    await ExercisesProvider.answer(
+      props.exercise,
+      props.questions,
+      answers.value
+    );
+
     showResult.value = true;
   }
 };
@@ -65,12 +73,7 @@ const handleResult = async () => {
 <template>
   <div>
     <!-- Quiz -->
-    <QuizResult
-      v-if="showResult"
-      :questions="questions"
-      :answers="answers"
-      :exercise="exercise"
-    />
+    <QuizResult v-if="showResult" :questions="questions" />
     <div v-else class="space-y-8">
       <div class="space-y-4">
         <h2 class="text-2xl font-bold text-gray-900">
