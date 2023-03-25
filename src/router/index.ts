@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { getCurrentUser } from 'vuefire';
 
+const NotFoundViewVue = () => import('@/views/NotFoundView.vue');
+
 const LoginView = () => import('@/views/auth/LoginView.vue');
 const RegisterView = () => import('@/views/auth/RegisterView.vue');
 
@@ -13,6 +15,11 @@ const ExerciseView = () => import('@/views/ExerciseView.vue');
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    {
+      path: '/:pathMatch(.*)*',
+      name: '404',
+      component: NotFoundViewVue,
+    },
     {
       path: '/',
       name: 'home',
