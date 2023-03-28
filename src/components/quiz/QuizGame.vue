@@ -43,7 +43,7 @@ const handleNext = async () => {
   }
 };
 
-const handleResult = async () => {
+const handleAnswer = async () => {
   // Add result to feed bar
   currentQuestion.value.success = currentQuestion.value.answers.every(
     (answer) =>
@@ -77,7 +77,7 @@ const handleResult = async () => {
 
       <div class="flex justify-end items-center">
         <button
-          @click="showAnswer ? handleNext() : handleResult()"
+          @click="showAnswer ? handleNext() : handleAnswer()"
           class="btn-primary py-4 md:px-8 w-full md:w-auto"
         >
           {{ quizIsCompleted ? 'Finish' : showAnswer ? 'Next' : 'Check' }}

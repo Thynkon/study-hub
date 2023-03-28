@@ -16,7 +16,6 @@ import type Exercise from '@/models/exercise';
 import type Question from '@/models/question';
 
 const { notify } = useNotification();
-const user = useCurrentUser();
 
 export default class ExercisesProvider {
   public static all() {
@@ -24,7 +23,7 @@ export default class ExercisesProvider {
   }
 
   private static async _author() {
-    const documentName = user.value?.uid;
+    const documentName = useCurrentUser().value?.uid;
 
     // Get author reference
     // https://stackoverflow.com/a/73466093
@@ -36,7 +35,7 @@ export default class ExercisesProvider {
   }
 
   private static requireAuthentification() {
-    if (!user.value) {
+    if (!useCurrentUser().value) {
       notify({
         type: 'error',
         group: 'exercises',
@@ -45,7 +44,6 @@ export default class ExercisesProvider {
 
       throw new Error('You must be logged in to create an exercise');
     }
-
   }
 
   public static async create(exercise: Exercise) {
@@ -113,7 +111,7 @@ export default class ExercisesProvider {
 
   public static async answer(exercise: Exercise, questions: Question[]) {
     // If the user is not logged in, we don't save the answers
-    if (!user.value) {
+    if (!useCurrentUser().value) {
       return;
     }
 

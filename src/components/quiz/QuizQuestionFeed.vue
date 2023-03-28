@@ -10,7 +10,7 @@ defineProps<{
 <template>
   <div class="flex space-x-2">
     <div
-      v-for="question in (questions as Question[])"
+      v-for="question in questions"
       :key="question.id"
       class="w-8 h-1 rounded-sm"
       :class="[
