@@ -35,7 +35,7 @@ export default class ExercisesProvider {
     return authorRef;
   }
 
-  public static async create(exercise: Exercise) {
+  private static requireAuthentification() {
     if (!user.value) {
       notify({
         type: 'error',
@@ -45,6 +45,11 @@ export default class ExercisesProvider {
 
       throw new Error('You must be logged in to create an exercise');
     }
+
+  }
+
+  public static async create(exercise: Exercise) {
+    this.requireAuthentification();
 
     // First, create exercise's questions in firebase
     // Create subject in subjects collection
@@ -84,6 +89,8 @@ export default class ExercisesProvider {
   }
 
   public static async delete(exercise: Exercise) {
+    this.requireAuthentification();
+
     // Delete exercise's questions
     exercise.questions.forEach(async (question: any) => {
       await deleteDoc(doc(db, 'questions', question.id));

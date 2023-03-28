@@ -18,7 +18,7 @@ const { notify } = useNotification();
 const user = useCurrentUser();
 
 export default class SubjectsProvider {
-  public static async create(subject: Subject) {
+  private static requireAuthentification() {
     if (!user.value) {
       notify({
         type: 'error',
@@ -27,6 +27,9 @@ export default class SubjectsProvider {
       });
       return;
     }
+  }
+  public static async create(subject: Subject) {
+    this.requireAuthentification();
 
     const documentName = user.value?.uid;
 
@@ -59,6 +62,8 @@ export default class SubjectsProvider {
   }
 
   public static async update(subject: Subject, data: any) {
+    this.requireAuthentification();
+
     // Update subject in subjects collection
     updateDoc(doc(db, 'subjects', subject.id), {
       name: data.name,
@@ -73,6 +78,8 @@ export default class SubjectsProvider {
   }
 
   public static async delete(subject: Subject) {
+    this.requireAuthentification();
+
     // Delete subject exercises
     subject.exercises?.forEach(async (exercise: any) => {
       await ExercisesProvider.delete(exercise);

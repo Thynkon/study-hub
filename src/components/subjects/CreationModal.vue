@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { reactive } from 'vue';
 import {
   Dialog,
   DialogPanel,
@@ -9,6 +8,7 @@ import {
 } from '@headlessui/vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
+import { reactive } from 'vue';
 import { useCurrentUser } from 'vuefire';
 
 import Subject from '@/models/subject';
@@ -31,7 +31,14 @@ const onSubmit = async () => {
   }
 
   await SubjectsProvider.create(
-    new Subject('', user, formData.name, formData.slug, formData.description)
+    new Subject(
+      '',
+      null,
+      user,
+      formData.name,
+      formData.slug,
+      formData.description
+    )
   );
 
   props.closeModal();
