@@ -9,7 +9,7 @@ import type Exercise from '@/models/exercise';
 import type Subject from '@/models/subject';
 
 import ExerciseCard from '@/components/exercises/ExerciseCard.vue';
-import SuccessAlert from '@/components/notifications/SuccessAlert.vue.js';
+import SuccessAlert from '@/components/notifications/SuccessAlert.vue';
 
 const props = defineProps<{
   id: string;
