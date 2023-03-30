@@ -34,6 +34,10 @@
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+### Configuration
+
+Create a firebase.ts file in the `src` folder based on the `firebase.ts.example` and fill it with your own Firebase project settings.
+
 ### Installation
 
 ```sh
