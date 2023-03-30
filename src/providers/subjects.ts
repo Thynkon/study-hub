@@ -18,18 +18,22 @@ const { notify } = useNotification();
 const user = useCurrentUser();
 
 export default class SubjectsProvider {
-  private static requireAuthentification() {
+  private static requireAuthentication() {
     if (!user.value) {
       notify({
         type: 'error',
         group: 'subjects',
         title: 'You must be logged in to create a subject',
       });
-      return;
+      return false;
     }
+
+    return true;
   }
   public static async create(subject: Subject) {
-    this.requireAuthentification();
+    if (!this.requireAuthentication()) {
+      return;
+    }
 
     const documentName = user.value?.uid;
 
@@ -62,7 +66,9 @@ export default class SubjectsProvider {
   }
 
   public static async update(subject: Subject, data: any) {
-    this.requireAuthentification();
+    if (!this.requireAuthentication()) {
+      return;
+    }
 
     // Update subject in subjects collection
     updateDoc(doc(db, 'subjects', subject.id), {
@@ -78,7 +84,9 @@ export default class SubjectsProvider {
   }
 
   public static async delete(subject: Subject) {
-    this.requireAuthentification();
+    if (!this.requireAuthentication()) {
+      return;
+    }
 
     // Delete subject exercises
     subject.exercises?.forEach(async (exercise: any) => {

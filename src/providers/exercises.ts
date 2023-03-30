@@ -34,7 +34,7 @@ export default class ExercisesProvider {
     return authorRef;
   }
 
-  private static requireAuthentification() {
+  private static requireAuthentication() {
     if (!useCurrentUser().value) {
       notify({
         type: 'error',
@@ -42,12 +42,16 @@ export default class ExercisesProvider {
         title: 'You must be logged in to create an exercise',
       });
 
-      throw new Error('You must be logged in to create an exercise');
+      return false;
     }
+
+    return true;
   }
 
   public static async create(exercise: Exercise) {
-    this.requireAuthentification();
+    if (!this.requireAuthentication()) {
+      return;
+    }
 
     // First, create exercise's questions in firebase
     // Create subject in subjects collection
@@ -87,7 +91,9 @@ export default class ExercisesProvider {
   }
 
   public static async delete(exercise: Exercise) {
-    this.requireAuthentification();
+    if (!this.requireAuthentication()) {
+      return;
+    }
 
     // Delete exercise's questions
     exercise.questions.forEach(async (question: any) => {
