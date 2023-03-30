@@ -7,9 +7,10 @@ import { useCollection } from 'vuefire';
 
 import type Subject from '@/models/subject';
 
-import SuccessAlert from '@/components/SuccessAlert.vue';
-import SubjectCard from '@/components/subjects/SubjectCard.vue';
+import ErrorAlert from '@/components/notifications/ErrorAlert.vue';
+import SuccessAlert from '@/components/notifications/SuccessAlert.vue';
 import SubjectCreationModal from '@/components/subjects/CreationModal.vue';
+import SubjectCard from '@/components/subjects/SubjectCard.vue';
 
 const subjects = useCollection(collection(db, 'subjects'));
 
@@ -19,6 +20,7 @@ const isCreationModalOpen = ref(false);
 <template>
   <div>
     <SuccessAlert position="top right" group="subjects" />
+    <ErrorAlert position="top right" group="subjects" />
 
     <div class="py-8 space-y-4">
       <!-- Action bar -->

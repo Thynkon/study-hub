@@ -5,11 +5,11 @@ import { db } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import { useDocument } from 'vuefire';
 
-import type Subject from '@/models/subject';
 import type Exercise from '@/models/exercise';
+import type Subject from '@/models/subject';
 
-import SuccessAlert from '@/components/SuccessAlert.vue';
 import ExerciseCard from '@/components/exercises/ExerciseCard.vue';
+import SuccessAlert from '@/components/notifications/SuccessAlert.vue.js';
 
 const props = defineProps<{
   id: string;
